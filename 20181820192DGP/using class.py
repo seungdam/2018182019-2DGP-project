@@ -41,8 +41,8 @@ def handle_event():
 
 class Player:
     def __init__(self):
-        self.x = 100
-        self.y = 100
+        self.x = 500
+        self.y = 500
         self.frame = 0
         self.idle = load_image('test1.png')
         self.run_right = load_image('test2-r.png')
@@ -87,27 +87,27 @@ class Player:
 
     def drawing(self):
         if state == 0:
-            self.idle.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.idle.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
         elif state == 1:
-            self.run_right.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.run_right.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
         elif state == -1:
-            self.run_left.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.run_left.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
         elif state == 2 or state == -2:
-            self.up_down.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.up_down.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
         elif state == 3:
-            self.action_right.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.action_right.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
         elif state == -3:
-            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
 
     pass
 
-open_canvas()
+
+open_canvas(1280, 640)
 player = Player()
 
-while(game):
+while game:
     handle_event()
     player.update()
-
     clear_canvas()
     player.drawing()
     update_canvas()
