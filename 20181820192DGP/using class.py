@@ -86,28 +86,56 @@ class Player:
     pass
 
     def drawing(self):
+        draw_rectangle(self.x , self.y, self.x + 64, self.y - 64)
         if state == 0:
-            self.idle.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.idle.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == 1:
-            self.run_right.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.run_right.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == -1:
-            self.run_left.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.run_left.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == 2 or state == -2:
-            self.up_down.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.up_down.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == 3:
-            self.action_right.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.action_right.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == -3:
-            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x - 32, self.y - 32)
+            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y + 32)
 
     pass
 
+class Stage:
+
+    def __init__(self):
+        self.tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 2, 1, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 1, 1, 1, 1, 1, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0]
+                          ]
+        self.normal_block = load_image('block4.png')
+        self.wall_block = load_image('block3.png')
+        self.background = load_image('realBackGround.png')
+
+    def draw(self):
+        self.background.draw(640,320)
+        for i in range(0, 10):
+            for k in range(0, 19):
+                if self.tile_type[i][k] == 1:
+                    self.normal_block.draw(0 + 64 * k + 32, 640 - i * 64 - 32, 64, 64)
+                elif self.tile_type[i][k] == 2:
+                    self.wall_block.draw(0 + 64 * k + 32, 640 - i * 64 - 32, 64, 64)
 
 open_canvas(1280, 640)
 player = Player()
-
+stage1 = Stage()
 while game:
     handle_event()
     player.update()
     clear_canvas()
+    stage1.draw()
     player.drawing()
     update_canvas()
