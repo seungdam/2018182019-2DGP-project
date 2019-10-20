@@ -98,7 +98,7 @@ class Player:
         elif state == 3:
             self.action_right.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
         elif state == -3:
-            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y + 32)
+            self.action_left.clip_draw(self.frame * 64, 0, 64, 64, self.x + 32, self.y - 32)
 
     pass
 
@@ -118,10 +118,20 @@ class Stage:
                           ]
         self.normal_block = load_image('block4.png')
         self.wall_block = load_image('block3.png')
-        self.background = load_image('realBackGround.png')
+        self.background1 = load_image('trees.png')
+        self.background2 = load_image('sky.png')
+        self.background3 = load_image('clouds.png')
 
     def draw(self):
-        self.background.draw(640,320)
+
+        self.background2.draw(640, 320, 1280, 640)
+        self.background3.draw(320, 400, 640, 160)
+        self.background3.draw(640, 400, 640, 160)
+        self.background3.draw(960, 400, 640, 160)
+        self.background1.draw(640, 160, 640, 640)
+        self.background1.draw(320, 160, 640, 640)
+        self.background1.draw(960, 160, 640, 640)
+
         for i in range(0, 10):
             for k in range(0, 19):
                 if self.tile_type[i][k] == 1:
