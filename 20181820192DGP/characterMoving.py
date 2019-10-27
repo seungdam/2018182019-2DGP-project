@@ -14,7 +14,48 @@ frame = 0
 state = 0 # 0 stand /1 ,-1 run/ 2 -2 up down / 3, -3 action
 claiming = False
 game = True
-
+# class Stage1:
+#     def __init__(self):
+#         self.tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 2, 1, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 1, 1, 1, 1, 1, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+#                           [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0]
+#                           ]
+#         self.normal_block = load_image('block4.png')
+#         self.wall_block = load_image('block3.png')
+#         self.background1 = load_image('trees.png')
+#         self.background2 = load_image('sky.png')
+#         self.background3 = load_image('clouds.png')
+#         self.rectX = []
+#         self.rectY = []
+#         for i in range(0,10):
+#             for j in range(0,19):
+#                 if self.tile_type[i][j] == 1 or self.tile_type[i][j] == 2:
+#                     self.rectX.append(32 + j * 64)
+#                     self.rectY.append(608 - i * 64)
+#         self.rect = [[x - 32 for x in self.rectX]]
+#     def draw(self):
+#
+#         self.background2.draw(640, 320, 1280, 640)
+#         self.background3.draw(320, 400, 640, 160)
+#         self.background3.draw(640, 400, 640, 160)
+#         self.background3.draw(960, 400, 640, 160)
+#         self.background1.draw(640, 160, 640, 640)
+#         self.background1.draw(320, 160, 640, 640)
+#         self.background1.draw(960, 160, 640, 640)
+#
+#         for i in range(0, 10):
+#             for k in range(0, 19):
+#                 if self.tile_type[i][k] == 1:
+#                     self.normal_block.draw(32 + 64 * k, 608 - i * 64, 64, 64)
+#                 elif self.tile_type[i][k] == 2:
+#                     self.wall_block.draw(32 + 64 * k, 608 - i * 64, 64, 64)
 
 def move_event():
     global game
