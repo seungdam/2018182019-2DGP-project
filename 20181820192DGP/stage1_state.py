@@ -5,11 +5,12 @@ import pygame
 name = 'Stage1State'
 
 player = None
-objectA = None
 block = []
 crushBlockList = []
+objectList = []
 count = 0
 backGround = None
+flag = None
 
 tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
              [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],  # 1
@@ -19,16 +20,16 @@ tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
              [0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 4, 1, 1, 1, 1, 4, 0, 0],  # 5
              [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],  # 6
              [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],  # 7
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],  # 8
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 4, 0, 0],  # 8
              [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4, 0, 0]  # 9
              ]
 
 
 def enter():
-    global player, objectA, count, backGround
-    player = Player((500, 500))
-    objectA = Object((500, 100))
+    global player, count, backGround, flag
+    player = Player((480, 500))
     backGround = load_image('chip\\realBackGround.png')
+
     for i in range(0, 10):
         for k in range(0, 19):
             if tile_type[i][k] == 1:
@@ -42,13 +43,25 @@ def enter():
             elif tile_type[i][k] == 4:
                 block.append(RightBlock((32 + 64 * k, 608 - i * 64)))
                 count += 1
+            elif tile_type[i][k] == 6:
+                flag = Flag((32 + 64 * k, 608 - i * 64))
+
+    for i in range(0, 6):
+        objectList.append(Object((520 + i * 30, 470)))
+    for k in range(0 , 3):
+        objectList.append(Object((540 + k * 50, 340)))
+    for j in range(0, 7):
+        objectList.append(Object((540 + j * 50, 80)))
+
     pass
 
 
 def exit():
-    global player, block
+    global player, block, objectList, crushBlockList
     del player
     del block
+    del objectList
+    del crushBlockList
     pass
 
 
@@ -80,6 +93,8 @@ def handle_events():
                 player.state = -3
             elif event.key == SDLK_ESCAPE:
                 game_framework.quit()
+            elif event.key == SDLK_p:
+                game_framework.change_state(tile_state)
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
                 player.state = 0
@@ -110,6 +125,7 @@ class Player:
         self.top = self.y + 20
         self.right = self.x + 22
         self.bottom = self.y - 32
+        self.objectNum = 0
 
     pass
 
@@ -221,7 +237,7 @@ class DownBlock:
 class LeftBlock:
     global player
 
-    def __init__(self,pos):
+    def __init__(self, pos):
         self.image = load_image('chip\\block3.png')
         self.x = pos[0]
         self.y = pos[1]
@@ -254,7 +270,7 @@ class RightBlock:
     global player
     image = None
 
-    def __init__(self,pos):
+    def __init__(self, pos):
         if RightBlock.image == None:
             self.image = load_image('chip\\block3.png')
         self.x = pos[0]
@@ -266,8 +282,6 @@ class RightBlock:
         self.drawing = True
 
         pass
-
-
 
     def update(self):
         pass
@@ -289,7 +303,7 @@ class RightBlock:
 class CrushBlock:
     global player
 
-    def __init__(self,pos):
+    def __init__(self, pos):
         self.image = load_image('chip\\block3.png')
         self.x = pos[0]
         self.y = pos[1]
@@ -318,7 +332,6 @@ class CrushBlock:
             if player.state == -3:
                 self.fill = False
 
-
     def draw(self):
         if self.fill:
             self.image.draw(self.x, self.y, 64, 64)
@@ -332,17 +345,18 @@ class CrushBlock:
 class Object:
     global player
     image = None
+
     def __init__(self, pos):
-        if Object.image == None:
+        if Object.image is None:
             self.image = load_image('chip\\Apple.png')
         self.x = pos[0]
         self.y = pos[1]
         self.frame = 0
-        self.left = self.x - 16
-        self.top = self.y + 16
-        self.right = self.x + 16
-        self.bottom = self.y - 16
-        self.drawing = True
+        self.left = self.x - 10
+        self.top = self.y + 10
+        self.right = self.x + 10
+        self.bottom = self.y - 10
+        self.exist = True
 
         pass
 
@@ -352,18 +366,101 @@ class Object:
 
     def check_collision(self):
         if (player.left <= self.right and player.right >= self.left) and (
-                player.bottom <= self.top and player.top >= self.bottom):
-            self.drawing = False
-        else:
-            self.drawing = True
+                player.bottom <= self.top and player.top >= self.bottom) and self.exist:
+            self.exist = False
+            player.objectNum += 1
+
         pass
 
     def draw(self):
-        if self.drawing:
+        if self.exist:
             self.image.clip_draw(self.frame * 32, 0, 32, 32, self.x, self.y)
         draw_rectangle(self.left, self.top, self.right, self.bottom)
         pass
 
+
+class Flag:
+    global player, stageClear
+
+    def __init__(self, pos):
+        self.noFlagImage = load_image('chip\\check_point_noflag.png')
+        self.FlagImage = load_image('chip\\check_point.png')
+        self.x = pos[0]
+        self.y = pos[1]
+        self.frame = 0
+        self.left = self.x - 10
+        self.top = self.y + 32
+        self.right = self.x + 10
+        self.bottom = self.y - 32
+        self.flagOn = False
+        pass
+
+    def update(self):
+        if player.objectNum == 16:
+            self.flagOn = True
+
+        if self.flagOn:
+            self.frame = (self.frame + 1) % 10
+        else:
+            pass
+        pass
+
+    def check_collision(self):
+        if self.flagOn:
+            if (player.left <= self.right and player.right >= self.left) and (
+                    player.bottom <= self.top and player.top >= self.bottom):
+                game_framework.quit()
+
+        pass
+
+    def draw(self):
+        if self.flagOn:
+            self.FlagImage.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
+        else:
+            self.noFlagImage.draw(self.x, self.y)
+            draw_rectangle(self.left, self.top, self.right, self.bottom)
+        pass
+
+class Enemy:
+    def __init__(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.state = 0
+        self.frame = 0
+        self.speed = 4
+        self.fallSpeed = 5
+        # self.idle = load_image('chip\\character_idle.png')
+        # self.run_right = load_image('chip\\character_run_right.png')
+        # self.run_left = load_image('chip\\character_run_left.png')
+        # self.up_down = load_image('chip\\character_updown2.png')
+        # self.action_right = load_image('chip\\character_action_right.png')
+        # self.action_left = load_image('chip\\character_action_left.png')
+        self.falling = True
+        self.left = self.x - 22
+        self.top = self.y + 20
+        self.right = self.x + 22
+        self.bottom = self.y - 32
+        self.objectNum = 0
+
+    pass
+
+    def update(self):
+        pass
+
+    def update_rect(self):
+        self.left = self.x - 22
+        self.top = self.y + 20
+        self.right = self.x + 22
+        self.bottom = self.y - 32
+
+    def draw(self):
+      pass
+
+
+
+
+
+#---------------------함수 업뎃 랜더링 통합처리
 
 def interact():
     player.falling = True
@@ -372,44 +469,31 @@ def interact():
     for i in crushBlockList:
         i.check_collision()
         i.crush()
-    objectA.check_collision()
+    for i in objectList:
+        i.check_collision()
+    flag.check_collision()
 
 
-
-# --------------- initiate map -----------
-
-# --------------------------------------------
-# stage1 = Stage1()
-
-
-
+# --------------- main state update -----------
+# ---------------------------------------------
 def draw():
     clear_canvas()
-    backGround.draw(640,320)
+    backGround.draw(640, 320)
     for i in block:
         i.draw()
     for i in crushBlockList:
         i.draw()
     player.draw()
-    objectA.draw()
+    for i in objectList:
+        i.draw()
+    flag.draw()
     update_canvas()
 
 
 def update():
     player.update()
     player.update_rect()
-    objectA.update()
+    for i in objectList:
+        i.update()
+    flag.update()
     interact()
-
-# while game:
-#     handle_event()
-#     player.update()
-#     objectA.update()
-#     interact()
-#     clear_canvas()
-#     # stage1.draw()
-#     for i in block:
-#         i.draw()
-#     objectA.draw()
-#     player.drawing()
-#     update_canvas()
