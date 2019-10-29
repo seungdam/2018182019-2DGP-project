@@ -14,8 +14,6 @@ change = True
 
 def enter():
     global character_image, title_image1, title_image2
-
-    character_image = load_image('chip\\character_run_right.png')
     title_image1 = load_image('title\\title1.png')
     title_image2 = load_image('title\\title2.png')
 
@@ -25,7 +23,6 @@ def enter():
 def exit():
     global character_image, title_image1, title_image2
 
-    del character_image
     del title_image2
     del title_image1
 
