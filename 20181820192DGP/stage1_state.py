@@ -334,7 +334,7 @@ class Flag:
         if self.flagOn:
             if (player.left <= self.right and player.right >= self.left) and (
                     player.bottom <= self.top and player.top >= self.bottom):
-                game_framework.change_state(title_state)
+                game_framework.quit()
 
         pass
 
