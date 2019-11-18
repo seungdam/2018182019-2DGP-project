@@ -9,6 +9,8 @@ from flour import FlourBlock
 from wall import WallBlock
 name = 'Stage1State'
 
+
+
 player = None
 blockList = []
 crushBlockList = []
@@ -24,14 +26,14 @@ flag = None
 
 tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
              [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],  # 1
-             [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0],  # 2
-             [0, 0, 0, 0, 2, 1, 1, 1, 3, 3, 3, 4, 0, 0, 0, 0, 0, 0, 0],  # 3
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0],  # 4
-             [0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 4, 1, 1, 1, 1, 4, 0, 0],  # 5
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],  # 6
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],  # 7
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 4, 0, 0],  # 8
-             [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4, 0, 0]  # 9
+             [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],  # 2
+             [0, 0, 0, 0, 2, 1, 1, 1, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],  # 3
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],  # 4
+             [0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 2, 1, 1, 1, 1, 2, 0, 0],  # 5
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],  # 6
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],  # 7
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 2, 0, 0],  # 8
+             [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0]  # 9
              ]
 
 
@@ -56,13 +58,11 @@ def enter():
                 blockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 3:
                 blockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
-    for i in range(39):
-        game_world.add_object(blockList[i], 1)
+    game_world.add_object(blockList, 1);
     pass
 
 
 def exit():
-    game_world.clear()
     pass
 
 
@@ -88,16 +88,19 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    for game_object in game_world.all_objects():
-        game_object.draw()
+    player.draw()
+    for i in blockList:
+        i.draw()
     update_canvas()
 
 
 def update():
-    for game_object in game_world.all_objects():
-        game_object.update()
-    for game_object in game_world.all_objects():
-        if collide(game_object,player):
-            game_object.late_update()
+
+    player.update()
+    for i in blockList:
+        i.get_player_info()
+        i.update()
+    for i in blockList:
+        i.late_update()
 
     pass

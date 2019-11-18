@@ -1,11 +1,13 @@
-from pico2d import*
+from pico2d import *
 
 image_sizeW = 64
 image_sizeH = 64
 
-def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자 (1)   플레이어 인자 (2)
-    if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
-        return True
+
+# def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자 (1)   플레이어 인자 (2)
+#     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
+#         return True
+
 
 def collide(a, b):
     left_a, top_a, right_a, bottom_a = a.get_bb()
@@ -15,6 +17,7 @@ def collide(a, b):
         return True
 
     return False
+
 
 class Flag:
 
@@ -31,7 +34,7 @@ class Flag:
         self.flagOn = False
         pass
 
-    def update(self,player):
+    def update(self, player):
 
         if player.objectNum == 16:
             self.flagOn = True
@@ -42,17 +45,15 @@ class Flag:
             pass
         pass
 
-    def late_update(self , player):
+    def late_update(self, player):
         if self.flagOn:
             pass
         pass
 
     def draw(self):
         if self.flagOn:
-            self.FlagImage.clip_draw(self.frame * image_sizeW, 0 , image_sizeW, image_sizeH, self.x, self.y)
+            self.FlagImage.clip_draw(self.frame * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
         else:
             self.noFlagImage.draw(self.x, self.y)
         #   draw_rectangle(self.left, self.top, self.right, self.bottom)
         pass
-
-

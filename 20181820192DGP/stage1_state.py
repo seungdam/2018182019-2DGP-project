@@ -38,12 +38,12 @@ class Player:
         self.frame = 0
         self.speed = 4
         self.fallSpeed = 5
-        self.idle = load_image('chip\\character_idle.png')
-        self.run_right = load_image('chip\\character_run_right.png')
-        self.run_left = load_image('chip\\character_run_left.png')
-        self.up_down = load_image('chip\\character_updown2.png')
-        self.action_right = load_image('chip\\character_action_right.png')
-        self.action_left = load_image('chip\\character_action_left.png')
+        self.idle = load_image('chip\\character\\character_idle.png')
+        self.run_right = load_image('chip\\character\\character_run_right.png')
+        self.run_left = load_image('chip\\character\\character_run_left.png')
+        self.up_down = load_image('chip\\character\\character_updown2.png')
+        self.action_right = load_image('chip\\character\\character_action_right.png')
+        self.action_left = load_image('chip\\character\\character_action_left.png')
         self.falling = True
         self.left = self.x - 22
         self.top = self.y + 20
@@ -167,7 +167,7 @@ class DownBlock:
 
     def __init__(self, pos):
         if DownBlock.image is None:
-            self.image = load_image('chip\\block4.png')
+            self.image = load_image('chip\\tileset\\block4.png')
         self.x = pos[0]
         self.y = pos[1]
         self.left = self.x - 32
@@ -180,6 +180,7 @@ class DownBlock:
 
     def check_collision(self):
         if player.left < self.right and player.right > self.left and player.bottom <= self.top and player.top >= self.bottom and player.falling:
+            print("intersect")
             player.falling = False
             if player.bottom <= self.top:
                 player.y += self.top - player.bottom
@@ -202,7 +203,7 @@ class LeftBlock:
     global player
 
     def __init__(self, pos):
-        self.image = load_image('chip\\block3.png')
+        self.image = load_image('chip\\tileset\\block3.png')
         self.x = pos[0]
         self.y = pos[1]
         self.left = self.x - 32
@@ -218,6 +219,7 @@ class LeftBlock:
 
     def check_collision(self):
         if player.left < self.right and player.right > self.left and player.bottom <= self.top and player.top >= self.bottom:
+            print("l")
             if player.left <= self.right:
                 player.x += self.right - player.left
         pass
@@ -236,7 +238,7 @@ class RightBlock:
 
     def __init__(self, pos):
         if RightBlock.image is None:
-            self.image = load_image('chip\\block3.png')
+            self.image = load_image('chip\\tileset\\block3.png')
         self.x = pos[0]
         self.y = pos[1]
         self.left = self.x - 32
@@ -252,6 +254,7 @@ class RightBlock:
 
     def check_collision(self):
         if player.left < self.right and player.right > self.left and player.bottom <= self.top and player.top >= self.bottom:
+            print("r")
             if player.right >= self.left:
                 player.x -= player.right - self.left
         pass
@@ -269,7 +272,7 @@ class CrushBlock:
     global player
 
     def __init__(self, pos):
-        self.image = load_image('chip\\Terrain (16x16)_9.png')
+        self.image = load_image('chip\\tileset\\Terrain (16x16)_9.png')
         self.x = pos[0]
         self.y = pos[1]
         self.left = self.x - 32
@@ -308,8 +311,8 @@ class Flag:
     global player, stageClear
 
     def __init__(self, pos):
-        self.noFlagImage = load_image('chip\\check_point_noflag.png')
-        self.FlagImage = load_image('chip\\check_point.png')
+        self.noFlagImage = load_image('chip\\object\\check_point_noflag.png')
+        self.FlagImage = load_image('chip\\object\\check_point.png')
         self.x = pos[0]
         self.y = pos[1]
         self.frame = 0
@@ -355,7 +358,7 @@ class Object:
 
     def __init__(self, pos):
         if Object.image is None:
-            self.image = load_image('chip\\Apple.png')
+            self.image = load_image('chip\\object\\Apple.png')
         self.x = pos[0]
         self.y = pos[1]
         self.frame = 0
@@ -372,7 +375,7 @@ class Object:
         pass
 
     def check_collision(self):
-        if (player.left <= self.right and player.right >= self.left) and (
+        if (player.left <= self.right and player.right >= self.left) and (            # 1l < 2r 1r > 2l 1b < 2t 1t > 2b
                 player.bottom <= self.top and player.top >= self.bottom) and self.exist:
             self.exist = False
             player.objectNum += 1
@@ -407,7 +410,7 @@ def interact():
 def enter():
     global player, count, backGround, flag, blockList, crushBlockList, objectList
     player = Player((480, 500))
-    backGround = load_image('chip\\realBackGround.png')
+    backGround = load_image('chip\\background\\realBackGround.png')
 
     for i in range(0, 10):
         for k in range(0, 19):

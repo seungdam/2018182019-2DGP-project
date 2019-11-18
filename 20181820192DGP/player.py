@@ -6,7 +6,7 @@ image_sizeH = 64
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 60.0  # Km / Hour
+RUN_SPEED_KMPH = 50.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -16,7 +16,8 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-RIGHT_KEY_DOWN, LEFT_KEY_DOWN, UP_KEY_DOWN, DOWN_KEY_DOWN, Z_KEY_DOWN, X_KEY_DOWN, RIGHT_KEY_UP, LEFT_KEY_UP, UP_KEY_UP, DOWN_KEY_UP, Z_KEY_UP, X_KEY_UP = range(12)
+RIGHT_KEY_DOWN, LEFT_KEY_DOWN, UP_KEY_DOWN, DOWN_KEY_DOWN, Z_KEY_DOWN, X_KEY_DOWN, RIGHT_KEY_UP, LEFT_KEY_UP, UP_KEY_UP, DOWN_KEY_UP, Z_KEY_UP, X_KEY_UP = range(
+    12)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_KEY_DOWN,
@@ -180,6 +181,11 @@ class Ohdam:
         self.actionOn = False
         self.objectNum = 0
 
+        self.left = self.x - 10
+        self.top = self.y + 10
+        self.right = self.x + 10
+        self.bottom = self.y - 10
+
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
@@ -194,19 +200,24 @@ class Ohdam:
 
     def update(self):
         if self.falling:
-            self.y -= RUN_SPEED_PPS * game_framework.frame_time
+            self.y -= 1 * game_framework.frame_time
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+
+        self.left = self.x - 22
+        self.top = self.y + 20
+        self.right = self.x + 22
+        self.bottom = self.y - 32
     def late_update(self):
         pass
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
