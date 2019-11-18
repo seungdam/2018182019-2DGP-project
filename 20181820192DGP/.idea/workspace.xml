@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a64b3b95-9710-4c2d-b7ec-59745183cc28" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crush.py" beforeDir="false" afterPath="$PROJECT_DIR$/crush.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flag.py" beforeDir="false" afterPath="$PROJECT_DIR$/flag.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flour.py" beforeDir="false" afterPath="$PROJECT_DIR$/flour.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/new_stage1_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/new_stage1_state.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stage1_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/stage1_state.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wall.py" beforeDir="false" afterPath="$PROJECT_DIR$/wall.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -185,16 +179,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/wall.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

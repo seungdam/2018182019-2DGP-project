@@ -4,6 +4,11 @@ import game_framework
 image_sizeW = 64
 image_sizeH = 64
 
+PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 50.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자가 먼저 그이후에 플레이어 인자
     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
