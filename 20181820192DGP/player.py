@@ -101,10 +101,12 @@ class RunState:
 class ActionState:
     @staticmethod
     def enter(ohdam, event):
+        ohdam.actionOn = True
         pass
 
     @staticmethod
     def exit(ohdam, event):
+        ohdam.actionOn = False
         pass
 
     @staticmethod
@@ -175,7 +177,7 @@ class Ohdam:
         self.action_right = load_image('chip\\character\\character_action_right.png')
         self.action_left = load_image('chip\\character\\character_action_left.png')
         self.falling = True
-            # aa
+        self.actionOn = False
         self.objectNum = 0
 
         self.event_que = []
@@ -191,12 +193,16 @@ class Ohdam:
         self.event_que.insert(0, event)
 
     def update(self):
+        if self.falling:
+            self.y -= RUN_SPEED_PPS * game_framework.frame_time
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+    def late_update(self):
+        pass
 
     def draw(self):
         self.cur_state.draw(self)

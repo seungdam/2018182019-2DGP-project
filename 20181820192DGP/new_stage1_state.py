@@ -4,16 +4,21 @@ import game_world
 import title_state
 from player import Ohdam
 from background import BackGround
-
+from crush import CrushBlock
+from flour import FlourBlock
+from wall import WallBlock
 name = 'Stage1State'
 
 player = None
 blockList = []
 crushBlockList = []
 objectList = []
+
 image_sizeW = 64
 image_sizeH = 64
+
 count = 0
+
 backGround = None
 flag = None
 
@@ -30,17 +35,7 @@ tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
              ]
 
 
-def interact():
-    pass
 
-
-def collide(a, b):
-    left_a, top_a, right_a, bottom_a = a.get_bb()
-    left_b, top_b, right_b, bottom_b = b.get_bb()
-
-    if left_b < right_a and right_a > left_b and bottom_b <= top_a and top_b >= bottom_a:
-        return True
-    return False
 
 
 def enter():
@@ -51,6 +46,18 @@ def enter():
     global backGround
     backGround = BackGround()
     game_world.add_object(backGround, 0)
+
+    global blockList
+    for i in range(10):
+        for k in range(19):
+            if tile_type[i][k] is 1:
+                blockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 2:
+                blockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 3:
+                blockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
+    for i in range(39):
+        game_world.add_object(blockList[i], 1)
     pass
 
 
@@ -89,4 +96,8 @@ def draw():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+    for game_object in game_world.all_objects():
+        if collide(game_object,player):
+            game_object.late_update()
+
     pass

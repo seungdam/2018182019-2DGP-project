@@ -1,5 +1,5 @@
 from pico2d import *
-
+from new_stage1_state import player
 image_sizeW = 64
 image_sizeH = 64
 
@@ -27,26 +27,21 @@ class FlourBlock:
         self.drawing = True
         pass
 
-    def get_bb(self):
-        return self.x - 32, self.y + 32, self.x + 32, self.y - 32
-
-    def check_collision(self, player):
-        if check_intersected_rect(self.left, self.top, self.right, self.bottom, player.left, player.top, player.right,
-                                  player.bottom) and player.falling:
-            player.falling = False
-
-            if player.bottom <= self.top:
-                player.y += self.top - player.bottom
-
-        pass
 
     def update(self):
+        pass
+
+    def late_update(self):
+        player.falling = False
+
+        if player.bottom <= self.top:
+            player.y += self.top - player.bottom
+
         pass
 
     def draw(self):
         if self.drawing:
             self.image.draw(self.x, self.y, image_sizeW, image_sizeH)
-        # draw_rectangle(self.left, self.top, self.right, self.bottom)
         pass
 
 # ---------------------------좌우 충돌체크 벽------------------------------

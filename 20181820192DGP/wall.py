@@ -3,11 +3,14 @@ from pico2d import *
 image_sizeW = 64
 image_sizeH = 64
 
+def collide(a, b):
+    left_a, top_a, right_a, bottom_a = a.get_bb()
+    left_b, top_b, right_b, bottom_b = b.get_bb()
 
-def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자가 먼저 그이후에 플레이어 인자
-    if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
+    if left_b < right_a and right_a > left_b and bottom_b <= top_a and top_b >= bottom_a:
         return True
 
+    return False
 
 class WallBlock:
 
@@ -28,13 +31,11 @@ class WallBlock:
     def update(self):
         pass
 
-    def check_collision(self, player):
-        if check_intersected_rect(self.left, self.top, self.right, self.bottom, player.left, player.top, player.right,
-                                  player.bottom) and player.falling:
-            if player.left <= self.right:
-                player.x += self.right - player.left
-            if player.right >= self.left:
-                player.x -= player.right - self.left
+    def late_update(self, player):
+        if player.left <= self.right:
+            player.x += self.right - player.left
+        if player.right >= self.left:
+            player.x -= player.right - self.left
         pass
 
     def draw(self):

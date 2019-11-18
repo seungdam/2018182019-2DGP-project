@@ -7,6 +7,15 @@ def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bo
     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
         return True
 
+def collide(a, b):
+    left_a, top_a, right_a, bottom_a = a.get_bb()
+    left_b, top_b, right_b, bottom_b = b.get_bb()
+
+    if left_b < right_a and right_a > left_b and bottom_b <= top_a and top_b >= bottom_a:
+        return True
+
+    return False
+
 class Flag:
 
     def __init__(self, pos):
@@ -23,6 +32,7 @@ class Flag:
         pass
 
     def update(self,player):
+
         if player.objectNum == 16:
             self.flagOn = True
 
@@ -32,11 +42,9 @@ class Flag:
             pass
         pass
 
-    def check_collision(self , player):
+    def late_update(self , player):
         if self.flagOn:
-            if check_intersected_rect(self.left,self.top,self.right,self.bottom,player.left,player.top,player.right,player.bottom):
-                # game_framework.quit()
-                pass
+            pass
         pass
 
     def draw(self):
