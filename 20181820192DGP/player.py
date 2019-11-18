@@ -175,7 +175,7 @@ class Ohdam:
         self.action_right = load_image('chip\\character\\character_action_right.png')
         self.action_left = load_image('chip\\character\\character_action_left.png')
         self.falling = True
-
+            # aa
         self.objectNum = 0
 
         self.event_que = []
