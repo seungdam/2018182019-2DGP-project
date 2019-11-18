@@ -20,8 +20,10 @@ class WallBlock:
         self.right = self.x + 32
         self.bottom = self.y - 32
         self.drawing = True
-
         pass
+
+    def get_bb(self):
+        return self.x - 32, self.y + 32, self.x + 32, self.y - 32
 
     def update(self):
         pass

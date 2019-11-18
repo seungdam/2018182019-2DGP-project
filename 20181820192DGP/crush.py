@@ -8,6 +8,8 @@ def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bo
     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
         return True
 
+    return False
+
 
 class CrushBlock:
     def __init__(self, pos):
@@ -19,10 +21,20 @@ class CrushBlock:
         self.right = self.x + 32
         self.bottom = self.y - 32
         self.fill = True
+        self.restore = 100
         pass
 
     def update(self):
+        if not self.fill:
+            self.restore -= 1
+
+        if self.restore is 0:
+            self.fill = True
+            self.restore = 100
         pass
+
+    def get_bb(self):
+        return self.x - 32, self.y + 32, self.x + 32, self.y - 32
 
     def check_collision(self, player):
         if check_intersected_rect(self.left, self.top, self.right, self.bottom, player.left, player.top, player.right,
