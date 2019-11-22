@@ -5,8 +5,8 @@ image_sizeW = 64
 image_sizeH = 64
 
 # Boy Run Speed
-PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 50.0  # Km / Hour
+PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
+RUN_SPEED_KMPH = 30.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -40,7 +40,6 @@ key_event_table = {
 class IdleState:
     @staticmethod
     def enter(ohdam, event):
-
         if event == RIGHT_KEY_DOWN:
             ohdam.velocity += RUN_SPEED_PPS
         elif event == LEFT_KEY_DOWN:
@@ -86,7 +85,8 @@ class RunState:
     @staticmethod
     def do(ohdam):
         ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
-        ohdam.x += ohdam.velocity * game_framework.frame_time
+        if not ohdam.falling:
+            ohdam.x += ohdam.velocity * game_framework.frame_time
 
     @staticmethod
     def draw(ohdam):
@@ -99,15 +99,15 @@ class RunState:
     pass
 
 
-class ActionState:
+class LeftActionState:
     @staticmethod
     def enter(ohdam, event):
-        ohdam.actionOn = True
+        ohdam.do_left_action = True
         pass
 
     @staticmethod
     def exit(ohdam, event):
-        ohdam.actionOn = False
+        ohdam.do_left_action = False
         pass
 
     @staticmethod
@@ -116,10 +116,27 @@ class ActionState:
 
     @staticmethod
     def draw(ohdam):
-        if ohdam.dir is 1:
-            ohdam.action_right.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y)
-        else:
-            ohdam.action_left.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y)
+        ohdam.action_left.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y)
+
+
+class RightActionState:
+    @staticmethod
+    def enter(ohdam, event):
+        ohdam.do_right_action = True
+        pass
+
+    @staticmethod
+    def exit(ohdam, event):
+        ohdam.do_right_action = False
+        pass
+
+    @staticmethod
+    def do(ohdam):
+        ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
+
+    @staticmethod
+    def draw(ohdam):
+        ohdam.action_right.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y)
 
 
 class ClimbingState:
@@ -150,17 +167,25 @@ class ClimbingState:
 
 next_state_table = {
     IdleState: {RIGHT_KEY_UP: IdleState, LEFT_KEY_UP: IdleState, RIGHT_KEY_DOWN: RunState, LEFT_KEY_DOWN: RunState,
-                Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: ActionState, X_KEY_DOWN: ActionState,
+                Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: LeftActionState, X_KEY_DOWN: RightActionState,
                 UP_KEY_UP: IdleState, DOWN_KEY_UP: IdleState, UP_KEY_DOWN: IdleState, DOWN_KEY_DOWN: IdleState,
                 },
     RunState: {RIGHT_KEY_UP: IdleState, LEFT_KEY_UP: IdleState, LEFT_KEY_DOWN: RunState, RIGHT_KEY_DOWN: RunState,
-               Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: ActionState, X_KEY_DOWN: ActionState,
-               UP_KEY_UP: IdleState, DOWN_KEY_UP: IdleState, UP_KEY_DOWN: IdleState, DOWN_KEY_DOWN: IdleState,
+               Z_KEY_UP: RunState, X_KEY_UP: RunState, Z_KEY_DOWN: LeftActionState, X_KEY_DOWN: RightActionState,
+               UP_KEY_UP: RunState, DOWN_KEY_UP: RunState, UP_KEY_DOWN: RunState, DOWN_KEY_DOWN: RunState,
                },
-    ActionState: {RIGHT_KEY_UP: IdleState, LEFT_KEY_UP: IdleState, LEFT_KEY_DOWN: RunState, RIGHT_KEY_DOWN: RunState,
-                  Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: ActionState, X_KEY_DOWN: ActionState,
-                  UP_KEY_UP: IdleState, DOWN_KEY_UP: IdleState, UP_KEY_DOWN: IdleState, DOWN_KEY_DOWN: IdleState,
-                  },
+    LeftActionState: {RIGHT_KEY_UP: IdleState, LEFT_KEY_UP: IdleState, LEFT_KEY_DOWN: RunState,
+                      RIGHT_KEY_DOWN: RunState,
+                      Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: LeftActionState,
+                      X_KEY_DOWN: RightActionState,
+                      UP_KEY_UP: IdleState, DOWN_KEY_UP: IdleState, UP_KEY_DOWN: IdleState, DOWN_KEY_DOWN: IdleState,
+                      },
+    RightActionState: {RIGHT_KEY_UP: IdleState, LEFT_KEY_UP: IdleState, LEFT_KEY_DOWN: RunState,
+                       RIGHT_KEY_DOWN: RunState,
+                       Z_KEY_UP: IdleState, X_KEY_UP: IdleState, Z_KEY_DOWN: LeftActionState,
+                       X_KEY_DOWN: RightActionState,
+                       UP_KEY_UP: IdleState, DOWN_KEY_UP: IdleState, UP_KEY_DOWN: IdleState, DOWN_KEY_DOWN: IdleState,
+                       },
 }
 
 
@@ -178,19 +203,25 @@ class Ohdam:
         self.action_right = load_image('chip\\character\\character_action_right.png')
         self.action_left = load_image('chip\\character\\character_action_left.png')
         self.falling = True
-        self.actionOn = False
+        self.do_left_action = False
+        self.do_right_action = False
         self.objectNum = 0
 
-        self.left = self.x - 10
-        self.top = self.y + 10
-        self.right = self.x + 10
-        self.bottom = self.y - 10
+        self.font = load_font('chip\\font\\ENCR10B.TTF', 16)
+
+        self.left = self.x - 22
+        self.top = self.y + 20
+        self.right = self.x + 22
+        self.bottom = self.y - 32
 
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
 
     pass
+
+    def ohdam_dead(self):
+        game_framework.quit()
 
     def get_bb(self):
         return self.x - 22, self.y + 20, self.x + 22, self.y - 32
@@ -200,7 +231,7 @@ class Ohdam:
 
     def update(self):
         if self.falling:
-            self.y -= 1 * game_framework.frame_time
+            self.y -= RUN_SPEED_PPS * game_framework.frame_time
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -212,12 +243,15 @@ class Ohdam:
         self.top = self.y + 20
         self.right = self.x + 22
         self.bottom = self.y - 32
+
     def late_update(self):
+
         pass
 
     def draw(self):
         self.cur_state.draw(self)
-
+        self.font.draw(self.x - 20, self.y + 20, '(x: %3.2f y: %3.2f)' % (self.x, self.y), (255, 255, 0))
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

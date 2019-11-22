@@ -7,9 +7,8 @@ from background import BackGround
 from crush import CrushBlock
 from flour import FlourBlock
 from wall import WallBlock
+
 name = 'Stage1State'
-
-
 
 player = None
 blockList = []
@@ -37,7 +36,21 @@ tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
              ]
 
 
+def collide(a, b):
 
+    left_a, top_a, right_a, bottom_a = a.get_bb()
+    left_b, top_b, right_b, bottom_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
+
+
+def get_ohdam_info():
+    return player
 
 
 def enter():
@@ -95,12 +108,15 @@ def draw():
 
 
 def update():
-
     player.update()
-    for i in blockList:
-        i.get_player_info()
-        i.update()
-    for i in blockList:
-        i.late_update()
 
+    for i in blockList:
+        i.update()
+
+    player.falling = True
+
+    for i in blockList:
+        if collide(i, player):
+            i.late_update()
+    print(player.falling)
     pass

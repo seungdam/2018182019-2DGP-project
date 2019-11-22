@@ -31,45 +31,28 @@ class FlourBlock:
         self.drawing = True
 
         # --------- 플레이어 객체 정보 ---------
-        self.o_falling = False
-        self.o_x = 0
-        self.o_y = 0
-        self.o_left = 0
-        self.o_top = 0
-        self.o_right = 0
-        self.o_bottom = 0
-        self.o_actionOn = False
+
         # -----------------------------------------
         pass
 
     def get_bb(self):
         return self.x - 32, self.y + 32, self.x + 32, self.y - 32
 
-    def get_player_info(self):
-        self.o_falling = new_stage1_state.player.falling
-        self.o_x = new_stage1_state.player.x
-        self.o_y = new_stage1_state.player.y
-        self.o_left = new_stage1_state.player.left
-        self.o_top = new_stage1_state.player.top
-        self.o_right = new_stage1_state.player.right
-        self.o_bottom = new_stage1_state.player.bottom
-        self.o_actionOn = new_stage1_state.player.actionOn
-
     def update(self):
 
         pass
-
     def late_update(self):
-        self.o_falling = False
-        if self.o_bottom <= self.top:
-            self.o_y += self.top - self.o_bottom
+        player = new_stage1_state.get_ohdam_info()
+        if player.falling:
+            player.falling = False
+            if player.bottom < self.top:
+                player.y += (self.top - player.bottom)
         pass
 
     def draw(self):
         if self.drawing:
             self.image.draw(self.x, self.y, image_sizeW, image_sizeH)
+        draw_rectangle(*self.get_bb())
         pass
-
-# ---------------------------좌우 충돌체크 벽------------------------------
 
 

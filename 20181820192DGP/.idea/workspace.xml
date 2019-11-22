@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a64b3b95-9710-4c2d-b7ec-59745183cc28" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wall.py" beforeDir="false" afterPath="$PROJECT_DIR$/wall.py" afterDir="false" />
-    </list>
+    <list default="true" id="a64b3b95-9710-4c2d-b7ec-59745183cc28" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +21,7 @@
   <component name="ProjectId" id="1RhNj1wLfkVvw9O8eCfWAMiFUo1" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../DRILL_HOME/2018182019OSD_DRILL_HOME/drill11" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Drill_Ai" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">

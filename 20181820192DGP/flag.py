@@ -1,8 +1,12 @@
 from pico2d import *
-
+import new_stage1_state
+import game_framework
 image_sizeW = 64
 image_sizeH = 64
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 # def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자 (1)   플레이어 인자 (2)
 #     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
@@ -34,19 +38,21 @@ class Flag:
         self.flagOn = False
         pass
 
-    def update(self, player):
+    def update(self):
+        player = new_stage1_state.get_ohdam_info()
 
         if player.objectNum == 16:
             self.flagOn = True
 
         if self.flagOn:
-            self.frame = (self.frame + 1) % 10
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         else:
             pass
         pass
 
     def late_update(self, player):
         if self.flagOn:
+            game_framework.quit()
             pass
         pass
 
