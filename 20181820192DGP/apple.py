@@ -19,11 +19,6 @@ class Apple:
         self.x = pos[0]
         self.y = pos[1]
         self.frame = 0
-        self.left = self.x - 10
-        self.top = self.y + 10
-        self.right = self.x + 10
-        self.bottom = self.y - 10
-        self.fill = True
 
         pass
     def get_bb(self):
@@ -39,8 +34,7 @@ class Apple:
         player.objectNum += 1
 
     def draw(self):
-        if self.exist:
-            self.image.clip_draw(self.frame * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
+        self.image.clip_draw(self.frame * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
 
         pass
 
