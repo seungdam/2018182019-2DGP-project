@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
-import title_state
+import level_select_state
 from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
@@ -179,7 +179,9 @@ def update():
 
     if collide(enemy, player):
         enemy.late_update()
+
     if collide(flag, player):
-        flag.late_update()
+        if flag.flagOn:
+            game_framework.change_state(level_select_state)
 
     pass

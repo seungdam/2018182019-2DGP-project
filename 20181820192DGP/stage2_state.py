@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
-import title_state
+import level_select_state
 from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
@@ -65,7 +65,7 @@ def enter():
     global backGround
     backGround = BackGround()
     game_world.add_object(backGround, 0)
-
+    global flag
     global blockList
     for i in range(10):
         for k in range(19):
@@ -76,7 +76,7 @@ def enter():
             elif tile_type[i][k] is 3:
                 crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 6:
-                crushBlockList.append(Flag((32 + 64 * k, 608 - i * 64)))
+                flag = Flag((32 + 64 * k, 608 - i * 64))
             elif tile_type[i][k] is 7:
                 lebberList.append(LebberTop((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 8:
@@ -87,7 +87,7 @@ def enter():
     game_world.add_objects(crushBlockList, 2);
     game_world.add_objects(wallBlockList, 2);
     game_world.add_objects(lebberList, 0);
-
+    game_world.add_object(flag, 2)
     for i in range(0, 6):
         objectList.append(Apple((400 + i * 60, 470)))
     for k in range(0, 3):
@@ -98,7 +98,6 @@ def enter():
         objectList.append(Apple((600 + i * 60, 140)))
 
     game_world.add_objects(objectList, 2);
-
     global enemy
     enemy = Monster1((700, 480))
     game_world.add_object(enemy, 1);
@@ -148,7 +147,7 @@ def update():
         i.update()
     for i in objectList:
         i.update()
-
+    flag.update()
     player.falling = True
     player.can_up = False
 
@@ -173,7 +172,9 @@ def update():
     for i in objectList:
         if collide(player, i):
             i.late_update()
-
+    if collide(flag, player):
+        if flag.flagOn:
+            game_framework.change_state(level_select_state)
     if collide(enemy, player):
         enemy.late_update()
 

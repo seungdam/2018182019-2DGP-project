@@ -44,9 +44,7 @@ class Flag:
         pass
 
     def late_update(self):
-        if self.flagOn:
-            game_framework.quit()
-            pass
+
         pass
 
     def draw(self):
