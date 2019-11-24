@@ -1,6 +1,6 @@
 from pico2d import*
 import game_framework
-import new_stage1_state
+import game_world
 
 image_sizeW = 32
 image_sizeH = 32
@@ -30,7 +30,8 @@ class Apple:
         pass
 
     def late_update(self):
-        player = new_stage1_state.get_player_info()
+        player = game_world.bring_object(1, 0)
+
         player.objectNum += 1
 
     def draw(self):

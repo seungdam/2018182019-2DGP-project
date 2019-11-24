@@ -1,6 +1,7 @@
 from pico2d import *
-import stage1_state
+import game_world
 import game_framework
+
 image_sizeW = 64
 image_sizeH = 64
 
@@ -8,14 +9,6 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-def collide(a, b):
-    left_a, top_a, right_a, bottom_a = a.get_bb()
-    left_b, top_b, right_b, bottom_b = b.get_bb()
-
-    if left_b < right_a and right_a > left_b and bottom_b <= top_a and top_b >= bottom_a:
-        return True
-
-    return False
 class Flag:
 
     def __init__(self, pos):
@@ -29,10 +22,16 @@ class Flag:
         self.right = self.x + 10
         self.bottom = self.y - 32
         self.flagOn = False
+
         pass
 
     def update(self):
-        player = stage1_state.get_ohdam_info()
+        # if self.cur_stage is 1:
+        #     player = stage1_state.get_ohdam_info()
+        # elif self.cur_stage is 2:
+        #     player = stage2_state.get_ohdam_info()
+
+        player = game_world.bring_object(1, 0)
 
         if player.objectNum == 16:
             self.flagOn = True

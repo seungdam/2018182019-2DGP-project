@@ -1,12 +1,13 @@
 from pico2d import *
-import stage1_state
+import game_world
+import random
+
+
 
 image_sizeW = 64
 image_sizeH = 64
 
-
-
-
+RUN,IDLE,STUN = range(3)
 
 class CrushBlock:
     def __init__(self, pos):
@@ -23,35 +24,41 @@ class CrushBlock:
         pass
 
     def update(self):
-        player = new_stage1_state.get_ohdam_info()
-        if self.left - 42 <= player.x <= self.left and self.top <= player.y <= self.top + 32 and player.do_right_action:  #플레이어 -> 블록
-                self.fill = False
-        if self.right + 42 >= player.x >= self.right and self.top <= player.y <= self.top + 32 and player.do_left_action: # 블록 <- 플레이어
-                self.fill = False
+
+        player = game_world.bring_object(1, 0)
+
+        if self.left - 42 <= player.x <= self.left and self.top <= player.y <= self.top + 32 and player.do_right_action:  # 플레이어 -> 블록
+            self.fill = False
+        if self.right + 42 >= player.x >= self.right and self.top <= player.y <= self.top + 32 and player.do_left_action:  # 블록 <- 플레이어
+            self.fill = False
 
         if not self.fill:
             self.restore -= 1
-            if self.restore is 0:
+            if self.restore == 0:
                 self.fill = True
                 self.restore = 1000
+
         pass
 
     def get_bb(self):
         return self.x - 32, self.y + 32, self.x + 32, self.y - 32
 
     def late_update(self):
-        player = new_stage1_state.get_ohdam_info()
+        player = game_world.bring_object(1, 0)
         if self.fill and player.falling:
             player.falling = False
             if player.bottom <= self.top:
                 player.y += self.top - player.bottom
                 pass
         pass
+    def late_update2(self):
+        enemy = game_world.bring_object(1, 1)
+        if not self.fill:
+            if enemy.bottom <= self.top:
+                enemy.y += self.top - enemy.bottom
+                pass
 
     def draw(self):
         if self.fill:
             self.image.draw(self.x, self.y, image_sizeW, image_sizeH)
-
         draw_rectangle(*self.get_bb())
-
-        pass

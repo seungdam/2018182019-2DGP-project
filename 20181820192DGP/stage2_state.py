@@ -2,13 +2,13 @@ from pico2d import *
 import game_framework
 import game_world
 import title_state
-from player import Ohdam
+from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
 from flour import FlourBlock
 from wall import WallBlock
 from enemy import Monster1
-name = 'Stage1State'
+name = 'Stage2State'
 
 player = None
 flourBlockList = []
@@ -72,16 +72,16 @@ def enter():
     for i in range(10):
         for k in range(19):
             if tile_type[i][k] is 1:
-                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
+                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64),1))
             elif tile_type[i][k] is 2:
-                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
+                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64),1))
             elif tile_type[i][k] is 3:
-                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
-    game_world.add_object(flourBlockList, 1);
-    game_world.add_object(crushBlockList, 1);
-    game_world.add_object(wallBlockList, 1);
+                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64),1))
+    game_world.add_objects(flourBlockList, 1);
+    game_world.add_objects(crushBlockList, 1);
+    game_world.add_objects(wallBlockList, 1);
     global enemy
-    enemy = Monster1((240,520))
+    enemy = Monster1((240,520), 2)
 
     pass
 

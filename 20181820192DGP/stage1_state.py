@@ -2,12 +2,13 @@ from pico2d import *
 import game_framework
 import game_world
 import title_state
-from player import Ohdam
+from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
 from flour import FlourBlock
 from wall import WallBlock
 from enemy import Monster1
+
 name = 'Stage1State'
 
 player = None
@@ -63,36 +64,27 @@ def enter():
     player = Ohdam((480, 500))
     game_world.add_object(player, 1)
 
+    global enemy
+    enemy = Monster1((600, 96))
+    game_world.add_object(enemy, 1);
+
     global backGround
     backGround = BackGround()
     game_world.add_object(backGround, 0)
 
-    # global blockList
-    # for i in range(10):
-    #     for k in range(19):
-    #         if tile_type[i][k] is 1:
-    #             blockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
-    #         elif tile_type[i][k] is 2:
-    #             blockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
-    #         elif tile_type[i][k] is 3:
-    #             blockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
-    # game_world.add_object(blockList, 1);
+    for i in range(10):
+        for k in range(19):
+            if tile_type[i][k] is 1:
+                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 2:
+                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 3:
+                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
 
-    # for i in range(10):
-    #     for k in range(19):
-    #         if tile_type[i][k] is 1:
-    #             flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
-    #         elif tile_type[i][k] is 2:
-    #             wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
-    #         elif tile_type[i][k] is 3:
-    #             crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
-    # game_world.add_object(flourBlockList, 1);
-    # game_world.add_object(crushBlockList, 1);
-    # game_world.add_object(wallBlockList, 1);
-    #
-    # global enemy
-    # enemy = Monster1((600,70))
-    # game_world.add_object(enemy, 1);
+    game_world.add_objects(flourBlockList, 2);
+    game_world.add_objects(crushBlockList, 2);
+    game_world.add_objects(wallBlockList, 2);
+
     pass
 
 
@@ -122,18 +114,18 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    # player.draw()
+    player.draw()
     # for i in blockList:
     #     i.draw()
 
-    # player.draw()
-    # enemy.draw()
-    # for i in wallBlockList:
-    #     i.draw()
-    # for i in flourBlockList:
-    #     i.draw()
-    # for i in crushBlockList:
-    #     i.draw()
+    player.draw()
+    enemy.draw()
+    for i in wallBlockList:
+        i.draw()
+    for i in flourBlockList:
+        i.draw()
+    for i in crushBlockList:
+        i.draw()
     update_canvas()
 
 
@@ -151,32 +143,36 @@ def update():
     #     if collide(i, player):
     #         i.late_update()
 
-    # player.update()
-    # enemy.update()
-    # for i in wallBlockList:
-    #     i.update()
-    # for i in flourBlockList:
-    #     i.update()
-    # for i in crushBlockList:
-    #     i.update()
-    #
-    # player.falling = True
-    # for i in wallBlockList:
-    #     if collide(i, player):
-    #         i.late_update()
-    #     if collide(i, enemy):
-    #         enemy.intersect_wall = True
-    # for i in flourBlockList:
-    #     if collide(i, player):
-    #         i.late_update()
-    # for i in crushBlockList:
-    #     if collide(i, player):
-    #         i.late_update()
-    #     if collide(i, enemy):
-    #         if i.fill is False:
-    #             enemy.become_block(i)
-    #
-    # if collide(enemy, player):
-    #     enemy.late_update()
+    player.update()
+    enemy.update()
+    for i in wallBlockList:
+        i.update()
+    for i in flourBlockList:
+        i.update()
+    for i in crushBlockList:
+        i.update()
+
+    player.falling = True
+    for i in wallBlockList:
+        if collide(i, player):
+            i.late_update()
+        if collide(i, enemy):
+            i.late_update2()
+    for i in flourBlockList:
+        if collide(i, player):
+            i.late_update()
+        if collide(i, enemy):
+            i.late_update2()
+    for i in crushBlockList:
+        if collide(i, player):
+            i.late_update()
+        if collide(i, enemy):
+            if i.fill:
+                i.late_update2()
+            elif not i.fill:
+                enemy.become_block(i)
+
+    if collide(enemy, player):
+        enemy.late_update()
 
     pass

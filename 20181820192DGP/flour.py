@@ -1,5 +1,5 @@
 from pico2d import *
-import stage1_state
+import game_world
 
 image_sizeW = 64
 image_sizeH = 64
@@ -9,9 +9,6 @@ image_sizeH = 64
 #     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
 #         return True
 #     return False
-
-
-
 
 
 # --------------------- 바닥 --------------------
@@ -41,18 +38,26 @@ class FlourBlock:
     def update(self):
 
         pass
+
     def late_update(self):
-        player = stage1_state.get_ohdam_info()
+
+        player = game_world.bring_object(1, 0)
+
         if player.falling:
             player.falling = False
             if player.bottom < self.top:
                 player.y += (self.top - player.bottom)
+
         pass
+
+    def late_update2(self):
+        enemy = game_world.bring_object(1, 1)
+
+        if enemy.bottom < self.top:
+            enemy.y += (self.top - enemy.bottom)
 
     def draw(self):
         if self.drawing:
             self.image.draw(self.x, self.y, image_sizeW, image_sizeH)
         draw_rectangle(*self.get_bb())
         pass
-
-
