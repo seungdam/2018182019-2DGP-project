@@ -19,7 +19,7 @@ class Apple:
         self.x = pos[0]
         self.y = pos[1]
         self.frame = 0
-
+        self.exist = True
         pass
     def get_bb(self):
         return self.x - 10, self.y + 10, self.x + 10, self.y -10
@@ -31,11 +31,14 @@ class Apple:
 
     def late_update(self):
         player = game_world.bring_object(1, 0)
+        if self.exist:
+            player.objectNum += 1
+        self.exist = False
 
-        player.objectNum += 1
 
     def draw(self):
-        self.image.clip_draw(self.frame * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
+        if self.exist:
+            self.image.clip_draw(int(self.frame) * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
 
         pass
 

@@ -33,7 +33,7 @@ class Flag:
 
         player = game_world.bring_object(1, 0)
 
-        if player.objectNum == 10:
+        if player.objectNum == 16:
             self.flagOn = True
 
         if self.flagOn:
@@ -50,7 +50,7 @@ class Flag:
 
     def draw(self):
         if self.flagOn:
-            self.FlagImage.clip_draw(self.frame * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
+            self.FlagImage.clip_draw(int(self.frame) * image_sizeW, 0, image_sizeW, image_sizeH, self.x, self.y)
         else:
             self.noFlagImage.draw(self.x, self.y)
         #   draw_rectangle(self.left, self.top, self.right, self.bottom)

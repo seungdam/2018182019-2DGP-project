@@ -9,6 +9,7 @@ from flour import FlourBlock
 from flag import Flag
 from wall import WallBlock
 from enemy import Monster1
+from apple import Apple
 
 name = 'Stage1State'
 
@@ -83,6 +84,16 @@ def enter():
     game_world.add_objects(crushBlockList, 2);
     game_world.add_objects(wallBlockList, 2);
 
+    global objectList
+
+    for i in range(0, 6):
+        objectList.append(Apple((520 + i * 30, 470)))
+    for k in range(0, 3):
+        objectList.append(Apple((540 + k * 50, 340)))
+    for j in range(0, 7):
+        objectList.append(Apple((540 + j * 50, 80)))
+
+    game_world.add_objects(objectList, 2);
     pass
 
 
@@ -124,6 +135,8 @@ def draw():
         i.draw()
     for i in crushBlockList:
         i.draw()
+    for i in objectList:
+        i.draw()
     update_canvas()
 
 
@@ -139,7 +152,8 @@ def update():
         i.update()
     for i in crushBlockList:
         i.update()
-
+    for i in objectList:
+        i.update()
     player.falling = True
     for i in wallBlockList:
         if collide(i, player):
@@ -159,6 +173,9 @@ def update():
                 i.late_update2()
             elif not i.fill:
                 enemy.become_block(i)
+    for i in objectList:
+        if collide(i, player):
+            i.late_update()
 
     if collide(enemy, player):
         enemy.late_update()
