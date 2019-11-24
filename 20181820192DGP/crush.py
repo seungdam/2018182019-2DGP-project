@@ -1,15 +1,11 @@
 from pico2d import *
-import new_stage1_state
+import stage1_state
 
 image_sizeW = 64
 image_sizeH = 64
 
 
-# def check_intersected_rect(left1, top1, right1, bottom1, left2, top2, right2, bottom2):  # 자기자신의 인자 (1)   플레이어 인자 (2)
-#     if left2 < right1 and right1 > left2 and bottom2 <= top1 and top2 >= bottom1:
-#         return True
-#
-#     return False
+
 
 
 class CrushBlock:

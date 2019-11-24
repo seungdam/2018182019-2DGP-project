@@ -1,5 +1,5 @@
 from pico2d import *
-import new_stage1_state
+import stage1_state
 
 image_sizeW = 64
 image_sizeH = 64
@@ -42,7 +42,7 @@ class FlourBlock:
 
         pass
     def late_update(self):
-        player = new_stage1_state.get_ohdam_info()
+        player = stage1_state.get_ohdam_info()
         if player.falling:
             player.falling = False
             if player.bottom < self.top:

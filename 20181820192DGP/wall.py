@@ -1,5 +1,5 @@
 from pico2d import *
-import new_stage1_state
+import stage1_state
 import game_framework
 image_sizeW = 64
 image_sizeH = 64
@@ -34,8 +34,7 @@ class WallBlock:
         pass
 
     def late_update(self):
-        player = new_stage1_state.get_ohdam_info()
-
+        player = stage1_state.get_ohdam_info()
         if player.x <= self.x:  #                   플레이어 -> ㅁ
             player.x -= (player.right - self.left)
         elif player.x >= self.x: #                  ㅁ <- 플레이어

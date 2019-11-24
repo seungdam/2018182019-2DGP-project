@@ -61,7 +61,7 @@ class IdleState:
 
     @staticmethod
     def draw(ohdam):
-        ohdam.idle.clip_draw(int(ohdam.frame) * image_sizeW, 0, image_sizeW, image_sizeH, ohdam.x, ohdam.y)
+         ohdam.idle.clip_draw(int(ohdam.frame) * image_sizeW, 0, image_sizeW, image_sizeH, ohdam.x, ohdam.y)
 
 
 class RunState:
@@ -257,3 +257,4 @@ class Ohdam:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+
