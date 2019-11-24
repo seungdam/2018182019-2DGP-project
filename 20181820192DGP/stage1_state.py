@@ -6,6 +6,7 @@ from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
 from flour import FlourBlock
+from flag import Flag
 from wall import WallBlock
 from enemy import Monster1
 
@@ -51,14 +52,6 @@ def collide(a, b):
     return True
 
 
-def get_ohdam_info():
-    return player
-
-
-def get_crushBlock_info():
-    return crushBlockList
-
-
 def enter():
     global player
     player = Ohdam((480, 500))
@@ -72,6 +65,8 @@ def enter():
     backGround = BackGround()
     game_world.add_object(backGround, 0)
 
+    global flag
+
     for i in range(10):
         for k in range(19):
             if tile_type[i][k] is 1:
@@ -80,7 +75,10 @@ def enter():
                 wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 3:
                 crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 6:
+                flag = Flag((32 + 64 * k, 608 - i * 64))
 
+    game_world.add_object(flag, 2)
     game_world.add_objects(flourBlockList, 2);
     game_world.add_objects(crushBlockList, 2);
     game_world.add_objects(wallBlockList, 2);
@@ -89,6 +87,7 @@ def enter():
 
 
 def exit():
+    game_world.clear()
     pass
 
 
@@ -114,10 +113,9 @@ def handle_events():
 
 def draw():
     clear_canvas()
+    backGround.draw()
     player.draw()
-    # for i in blockList:
-    #     i.draw()
-
+    flag.draw()
     player.draw()
     enemy.draw()
     for i in wallBlockList:
@@ -130,21 +128,11 @@ def draw():
 
 
 def update():
-    # player.update()
-    #
-    # for i in blockList:
-    #     i.update()
-    #
-    # player.falling = True
-    # for i in blockList:
-    #     if collide(i, player):
-    #         i.late_update()
-    # for i in crushBlockList:
-    #     if collide(i, player):
-    #         i.late_update()
 
     player.update()
     enemy.update()
+    flag.update()
+
     for i in wallBlockList:
         i.update()
     for i in flourBlockList:
@@ -174,5 +162,7 @@ def update():
 
     if collide(enemy, player):
         enemy.late_update()
+    if collide(flag, player):
+        flag.late_update()
 
     pass

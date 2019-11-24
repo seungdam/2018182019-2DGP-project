@@ -32,14 +32,13 @@ class Monster1:
         self.frame = 0
         self.dir = 1
         self.change_state_time = 700
-
         self.velocity = RUN_SPEED_PPS
         self.left = self.x - 32
         self.top = self.y + 32
         self.right = self.x + 32
         self.bottom = self.y - 32
         self.sleep = False  # 플레이어가 오브젝트를 먹는 순간 해제
-        self.restore = 1000
+        self.rezen_time = 1000
         pass
 
     def get_bb(self):
@@ -70,7 +69,11 @@ class Monster1:
                 self.state = RUN
                 self.dir = random.randint(0, 1)
         elif self.state is STUN:
+            self.rezen_time -= 1
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11
+            if self.rezen_time < 0:
+                self.rezen_time = 1000
+                self.rezen((400, 96))
 
         self.left = self.x - 32
         self.top = self.y + 32
@@ -89,10 +92,12 @@ class Monster1:
         else:
             pass
         pass
+
     def rezen(self, pos):
         self.x = pos[0]
         self.y = pos[1]
         self.state = IDLE
+
     def draw(self):
         if self.state is RUN:
             if self.dir is RIGHT:

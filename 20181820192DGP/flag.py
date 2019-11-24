@@ -9,6 +9,7 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+
 class Flag:
 
     def __init__(self, pos):
@@ -25,15 +26,14 @@ class Flag:
 
         pass
 
+    def get_bb(self):
+        return self.x - 10, self.y + 32, self.x + 10, self.y - 32
+
     def update(self):
-        # if self.cur_stage is 1:
-        #     player = stage1_state.get_ohdam_info()
-        # elif self.cur_stage is 2:
-        #     player = stage2_state.get_ohdam_info()
 
         player = game_world.bring_object(1, 0)
 
-        if player.objectNum == 16:
+        if player.objectNum == 10:
             self.flagOn = True
 
         if self.flagOn:
@@ -42,7 +42,7 @@ class Flag:
             pass
         pass
 
-    def late_update(self, player):
+    def late_update(self):
         if self.flagOn:
             game_framework.quit()
             pass

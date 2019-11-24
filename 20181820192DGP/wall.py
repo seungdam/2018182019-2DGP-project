@@ -49,9 +49,9 @@ class WallBlock:
         enemy = game_world.bring_object(1, 1)
 
         if enemy.x <= self.x:  # 플레이어 -> ㅁ
-            enemy.x -= (enemy.right - self.left - 10)
+            enemy.x -= ((enemy.right - 10) - self.left)
         elif enemy.x >= self.x:  # ㅁ <- 플레이어
-            enemy.x += (self.right - enemy.left + 10)
+            enemy.x += (self.right - (enemy.left + 10))
 
     def draw(self):
         if self.drawing:

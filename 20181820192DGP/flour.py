@@ -43,10 +43,19 @@ class FlourBlock:
 
         player = game_world.bring_object(1, 0)
 
+        if player.top <= self.top and self.bottom <= player.bottom:
+            if player.x <= self.x:  # 플레이어 -> ㅁ
+                player.x -= (player.right - self.left)
+            elif player.x >= self.x:  # ㅁ <- 플레이어
+                player.x += (self.right - player.left)
+
         if player.falling:
             player.falling = False
             if player.bottom < self.top:
                 player.y += (self.top - player.bottom)
+
+
+
 
         pass
 

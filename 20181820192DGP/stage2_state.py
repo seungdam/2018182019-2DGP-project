@@ -7,12 +7,17 @@ from background import BackGround
 from crush import CrushBlock
 from flour import FlourBlock
 from wall import WallBlock
+from lebber import LebberTop
+from lebber import LebberMid
+from lebber import LebberBottom
+from flag import Flag
 from enemy import Monster1
 name = 'Stage2State'
 
 player = None
 flourBlockList = []
 wallBlockList = []
+lebberList = []
 crushBlockList = []
 objectList = []
 enemy = None
@@ -25,15 +30,15 @@ count = 0
 backGround = None
 flag = None
 
-tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0],  # 0 608
-             [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],  # 1 576
-             [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],  # 2 544
-             [0, 0, 0, 0, 2, 1, 3, 3, 1, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],  # 3 512
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],  # 4
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],  # 5
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 6
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],  # 7
-             [0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0],  # 8
+tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0],  # 0 608
+             [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 7, 0, 2, 0, 0, 0, 0],  # 1 576
+             [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 0, 0, 0, 0],  # 2 544
+             [0, 0, 0, 0, 2, 1, 1, 1, 3, 3, 3, 1, 1, 1, 2, 0, 0, 0, 0],  # 3 512
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0],  # 4
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 0, 0, 0, 2, 0, 0],  # 5
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 7, 1, 1, 1, 2, 0, 0],  # 6
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 9, 2, 2, 2, 2, 0, 0],  # 7
+             [0, 0, 0, 0, 0, 0, 0, 2, 1, 3, 3, 1, 1, 2, 2, 2, 2, 0, 0],  # 8
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9
              ]
 
@@ -72,21 +77,31 @@ def enter():
     for i in range(10):
         for k in range(19):
             if tile_type[i][k] is 1:
-                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64),1))
+                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 2:
-                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64),1))
+                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 3:
-                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64),1))
-    game_world.add_objects(flourBlockList, 1);
-    game_world.add_objects(crushBlockList, 1);
-    game_world.add_objects(wallBlockList, 1);
+                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 6:
+                crushBlockList.append(Flag((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 7:
+               lebberList.append(LebberTop((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 8:
+                lebberList.append(LebberMid((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 9:
+                lebberList.append(LebberBottom((32 + 64 * k, 608 - i * 64)))
+    game_world.add_objects(flourBlockList, 2);
+    game_world.add_objects(crushBlockList, 2);
+    game_world.add_objects(wallBlockList, 2);
+    game_world.add_objects(lebberList , 0);
     global enemy
-    enemy = Monster1((240,520), 2)
+    enemy = Monster1((240,520))
 
     pass
 
 
 def exit():
+    game_world.clear()
     pass
 
 
@@ -130,7 +145,7 @@ def update():
         i.update()
 
     player.falling = True
-    enemy.intersect_wall = False
+    player.can_up = False
 
     for i in wallBlockList:
         if collide(i, player):
@@ -146,6 +161,10 @@ def update():
         if collide(i, enemy):
             if i.fill is False:
                 enemy.become_block(i)
+    for i in lebberList:
+        if collide(i, player):
+            player.can_up = True
+            i.late_update()
 
     if collide(enemy, player):
         enemy.late_update()

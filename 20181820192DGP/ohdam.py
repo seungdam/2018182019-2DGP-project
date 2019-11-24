@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import game_world
 
 image_sizeW = 64
 image_sizeH = 64
@@ -15,6 +16,8 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
+
+UP_CLIMBING, DOWN_CLIMBING = range(2)
 
 RIGHT_KEY_DOWN, LEFT_KEY_DOWN, UP_KEY_DOWN, DOWN_KEY_DOWN, Z_KEY_DOWN, X_KEY_DOWN, RIGHT_KEY_UP, LEFT_KEY_UP, UP_KEY_UP, DOWN_KEY_UP, Z_KEY_UP, X_KEY_UP = range(
     12)
@@ -53,6 +56,15 @@ class IdleState:
 
     @staticmethod
     def exit(ohdam, event):
+        if event == UP_KEY_DOWN:
+            if ohdam.can_up:
+                ohdam.state = UP_CLIMBING
+        elif event == DOWN_KEY_DOWN and ohdam.can_up:
+            if ohdam.can_up:
+                ohdam.state = DOWN_CLIMBING
+        else:
+            ohdam.state = -2
+            ohdam.can_up = False
         pass
 
     @staticmethod
@@ -206,9 +218,9 @@ class Ohdam:
         self.do_left_action = False
         self.do_right_action = False
         self.objectNum = 0
-
+        self.state = -2
         self.font = load_font('chip\\font\\ENCR10B.TTF', 16)
-
+        self. can_up = False
         self.left = self.x - 22
         self.top = self.y + 20
         self.right = self.x + 22
@@ -232,7 +244,14 @@ class Ohdam:
     def update(self):
         if self.falling:
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
-        self.cur_state.do(self)
+
+        if self.state is UP_CLIMBING:
+            self.y += RUN_SPEED_PPS * game_framework.frame_time
+        elif self.state is DOWN_CLIMBING:
+            self.y -= RUN_SPEED_PPS * game_framework.frame_time
+        else:
+            self.cur_state.do(self)
+
         if len(self.event_que) > 0:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
