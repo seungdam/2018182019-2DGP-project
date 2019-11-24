@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import stage1_state
+import level_select_state
 
 name = 'TitleState'
 
@@ -46,8 +46,8 @@ def handle_events():
             if event.type == SDL_KEYDOWN:
                 if event.key is SDLK_ESCAPE:
                     game_framework.quit()
-                elif event.key is SDLK_s:
-                    game_framework.change_state(stage1_state)
+                elif event.key is SDLK_SPACE:
+                    game_framework.change_state(level_select_state)
 
     pass
 

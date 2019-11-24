@@ -2,6 +2,7 @@ from pico2d import *
 import game_world
 import game_framework
 
+
 image_sizeW = 64
 image_sizeH = 64
 

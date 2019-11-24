@@ -11,7 +11,9 @@ from lebber import LebberTop
 from lebber import LebberMid
 from lebber import LebberBottom
 from flag import Flag
+from apple import Apple
 from enemy import Monster1
+
 name = 'Stage2State'
 
 player = None
@@ -34,7 +36,7 @@ tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0],  # 0 608
              [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 7, 0, 2, 0, 0, 0, 0],  # 1 576
              [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 0, 0, 0, 0],  # 2 544
              [0, 0, 0, 0, 2, 1, 1, 1, 3, 3, 3, 1, 1, 7, 2, 0, 0, 0, 0],  # 3 512
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 8, 2, 1, 1, 0, 0],  # 4
+             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 8, 2, 1, 1, 0, 0],  # 4 448
              [0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 9, 0, 0, 2, 0, 0],  # 5
              [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 7, 1, 1, 1, 2, 0, 0],  # 6
              [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 9, 2, 2, 2, 2, 0, 0],  # 7
@@ -54,15 +56,6 @@ def collide(a, b):
 
     return True
 
-
-def get_ohdam_info():
-    return player
-
-def get_crushBlock_info():
-    return crushBlockList
-
-def get_wallBlock_info():
-    return wallBlockList
 
 def enter():
     global player
@@ -85,7 +78,7 @@ def enter():
             elif tile_type[i][k] is 6:
                 crushBlockList.append(Flag((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 7:
-               lebberList.append(LebberTop((32 + 64 * k, 608 - i * 64)))
+                lebberList.append(LebberTop((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 8:
                 lebberList.append(LebberMid((32 + 64 * k, 608 - i * 64)))
             elif tile_type[i][k] is 9:
@@ -93,10 +86,22 @@ def enter():
     game_world.add_objects(flourBlockList, 2);
     game_world.add_objects(crushBlockList, 2);
     game_world.add_objects(wallBlockList, 2);
-    game_world.add_objects(lebberList , 0);
-    global enemy
-    enemy = Monster1((240,520))
+    game_world.add_objects(lebberList, 0);
 
+    for i in range(0, 6):
+        objectList.append(Apple((400 + i * 60, 470)))
+    for k in range(0, 3):
+        objectList.append(Apple((600 + k * 40, 340)))
+    for j in range(0, 3):
+        objectList.append(Apple((920 + j * 40, 280)))
+    for i in range(0, 4):
+        objectList.append(Apple((600 + i * 60, 140)))
+
+    game_world.add_objects(objectList, 2);
+
+    global enemy
+    enemy = Monster1((700, 480))
+    game_world.add_object(enemy, 1);
     pass
 
 
@@ -132,9 +137,7 @@ def draw():
     update_canvas()
 
 
-
 def update():
-
     player.update()
     enemy.update()
     for i in wallBlockList:
@@ -142,6 +145,8 @@ def update():
     for i in flourBlockList:
         i.update()
     for i in crushBlockList:
+        i.update()
+    for i in objectList:
         i.update()
 
     player.falling = True
@@ -151,7 +156,7 @@ def update():
         if collide(i, player):
             i.late_update()
         if collide(i, enemy):
-            enemy.intersect_wall = True
+            i.late_update2()
     for i in flourBlockList:
         if collide(i, player):
             i.late_update()
@@ -165,10 +170,11 @@ def update():
         if collide(i, player):
             player.can_up = True
             i.late_update()
+    for i in objectList:
+        if collide(player, i):
+            i.late_update()
 
     if collide(enemy, player):
         enemy.late_update()
-
-
 
     pass
