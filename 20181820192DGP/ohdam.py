@@ -271,6 +271,7 @@ class Ohdam:
         self.cur_state.draw(self)
         self.font.draw(self.x - 20, self.y + 20, '(x: %3.2f y: %3.2f)' % (self.x, self.y), (255, 255, 0))
         draw_rectangle(*self.get_bb())
+        print(self.falling)
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

@@ -5,7 +5,7 @@ import level_select_state
 from ohdam import Ohdam
 from background import BackGround
 from crush import CrushBlock
-from flour import FlourBlock
+from block2 import FlourBlock
 from flag import Flag
 from wall import WallBlock
 from enemy import Monster1
@@ -156,11 +156,6 @@ def update():
         i.update()
     player.falling = True
     for i in wallBlockList:
-        if collide(i, player):
-            i.late_update()
-        if collide(i, enemy):
-            i.late_update2()
-    for i in flourBlockList:
         if collide(i, player):
             i.late_update()
         if collide(i, enemy):

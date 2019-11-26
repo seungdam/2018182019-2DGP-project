@@ -1,29 +1,25 @@
 from pico2d import *
 import game_framework
 import game_world
-import title_state
+import level_select_state
 from ohdam import Ohdam
 from background import BackGround
-from crush import CrushBlock
-from flour import FlourBlock
-from wall import WallBlock
-from lebber import LebberTop
-from lebber import LebberMid
-from lebber import LebberBottom
+from block3 import CrushBlock
+from block2 import FlourBlock
 from flag import Flag
-from apple import Apple
+from wall import WallBlock
 from enemy import Monster1
+from apple import Apple
 
-name = 'Stage2State'
+name = 'Stage1State'
 
 player = None
+blockList = []
+crushBlockList = []
 flourBlockList = []
 wallBlockList = []
-lebberList = []
-crushBlockList = []
 objectList = []
 enemy = None
-
 image_sizeW = 64
 image_sizeH = 64
 
@@ -32,16 +28,16 @@ count = 0
 backGround = None
 flag = None
 
-tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0, 0, 0],  # 0 608
-             [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 7, 0, 2, 0, 0, 0, 0],  # 1 576
-             [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 0, 0, 0, 0],  # 2 544
-             [0, 0, 0, 0, 2, 1, 1, 1, 3, 3, 3, 1, 1, 7, 2, 0, 0, 0, 0],  # 3 512
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 8, 2, 1, 1, 0, 0],  # 4 448
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 9, 0, 0, 2, 0, 0],  # 5
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 7, 1, 1, 1, 2, 0, 0],  # 6
-             [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 9, 2, 2, 2, 2, 0, 0],  # 7
-             [0, 0, 0, 0, 0, 0, 0, 2, 1, 3, 3, 1, 1, 2, 2, 2, 2, 0, 0],  # 8
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9
+tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
+             [0, 0, 0, 0, 13, 22, 0, 0, 0, 0, 0,   13, 0, 0, 0, 0, 0, 0, 0],  # 1
+             [0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0,  14, 0, 0, 0, 0, 0, 0, 0],  # 2
+             [0, 0, 0, 0, 1, 2, 2, 3, 20, 20, 20, 3, 0, 0, 0, 0, 0, 0, 0],  # 3
+             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0,    13, 0, 0, 0, 0, 1, 2, 3],  # 4
+             [0, 0, 0, 0, 4, 5, 5, 6, 20, 20, 20, 14, 0, 0, 0, 0, 4, 5, 6],  # 5
+             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 6],  # 6
+             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 21, 4, 5, 6],  # 7
+             [0, 0, 0, 0, 4, 5, 5, -4, 2, 2, 2, 2, 2, 2, 2, 2, -1, 5, 6],  # 8
+             [0, 0, 0, 0, 7, 8, 8, -5, 5, 5, 5, 5, 5, 5, 5, 5, -2, 5, 6]  # 9
              ]
 
 
@@ -59,49 +55,45 @@ def collide(a, b):
 
 def enter():
     global player
-    player = Ohdam((96, 610))
-    game_world.add_object(player, 1)
-
+    global objectList
+    global enemy
     global backGround
+    global flag
+
+
     backGround = BackGround()
     game_world.add_object(backGround, 0)
 
-    global blockList
+
+
     for i in range(10):
         for k in range(19):
-            if tile_type[i][k] is 1:
-                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 2:
-                wallBlockList.append(WallBlock((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 3:
+            if tile_type[i][k] is 20:
                 crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 6:
-                crushBlockList.append(Flag((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 7:
-                lebberList.append(LebberTop((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 8:
-                lebberList.append(LebberMid((32 + 64 * k, 608 - i * 64)))
-            elif tile_type[i][k] is 9:
-                lebberList.append(LebberBottom((32 + 64 * k, 608 - i * 64)))
+            elif tile_type[i][k] is 21:
+                flag = Flag((32 + 64 * k, 608 - i * 64))
+            elif tile_type[i][k] is 22:
+                player = Ohdam((32 + 64 * k, 608 - i * 64))
+            elif tile_type[i][k] is 0:
+                pass
+            else:
+                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64), tile_type[i][k]))
+
+    game_world.add_object(flag, 2)
     game_world.add_objects(flourBlockList, 2);
     game_world.add_objects(crushBlockList, 2);
     game_world.add_objects(wallBlockList, 2);
-    game_world.add_objects(lebberList, 0);
+    game_world.add_object(player, 1)
+    enemy = Monster1((600, 96))
+    game_world.add_object(enemy, 1);
 
     for i in range(0, 6):
-        objectList.append(Apple((400 + i * 60, 470)))
+        objectList.append(Apple((520 + i * 30, 470)))
     for k in range(0, 3):
-        objectList.append(Apple((600 + k * 40, 340)))
-    for j in range(0, 3):
-        objectList.append(Apple((920 + j * 40, 280)))
-    for i in range(0, 4):
-        objectList.append(Apple((600 + i * 60, 140)))
-
+        objectList.append(Apple((540 + k * 50, 340)))
+    for j in range(0, 7):
+        objectList.append(Apple((540 + j * 50, 80)))
     game_world.add_objects(objectList, 2);
-
-    global enemy
-    enemy = Monster1((700, 480))
-    game_world.add_object(enemy, 1);
     pass
 
 
@@ -132,14 +124,28 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    for game_object in game_world.all_objects():
-        game_object.draw()
+    backGround.draw()
+    player.draw()
+    flag.draw()
+    player.draw()
+    enemy.draw()
+    for i in wallBlockList:
+        i.draw()
+    for i in flourBlockList:
+        i.draw()
+    for i in crushBlockList:
+        i.draw()
+    for i in objectList:
+        i.draw()
     update_canvas()
 
 
 def update():
     player.update()
     enemy.update()
+    flag.update()
+
+    player.falling = True
     for i in wallBlockList:
         i.update()
     for i in flourBlockList:
@@ -148,33 +154,21 @@ def update():
         i.update()
     for i in objectList:
         i.update()
-
-    player.falling = True
-    player.can_up = False
 
     for i in wallBlockList:
         if collide(i, player):
             i.late_update()
         if collide(i, enemy):
             i.late_update2()
-    for i in flourBlockList:
-        if collide(i, player):
-            i.late_update()
-    for i in crushBlockList:
-        if collide(i, player):
-            i.late_update()
-        if collide(i, enemy):
-            if i.fill is False:
-                enemy.become_block(i)
-    for i in lebberList:
-        if collide(i, player):
-            player.can_up = True
-            i.late_update()
     for i in objectList:
-        if collide(player, i):
+        if collide(i, player):
             i.late_update()
 
     if collide(enemy, player):
         enemy.late_update()
+
+    if collide(flag, player):
+        if flag.flagOn:
+            game_framework.change_state(level_select_state)
 
     pass
