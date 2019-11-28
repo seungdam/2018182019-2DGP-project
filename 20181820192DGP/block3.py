@@ -31,7 +31,8 @@ def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rec
 
 image_sizeW = 64
 image_sizeH = 64
-
+object_sizeW = 32
+object_sizeH = 32
 RUN, IDLE, STUN = range(3)
 
 

@@ -31,7 +31,7 @@ class FlourBlock:
 
     def __init__(self, pos, type):
         if FlourBlock.image is None:
-            self.image = load_image('chip\\tileset\\newTile(7X11)2.png')
+            self.image = load_image('chip\\tileset\\newTile(7X11)3.png')
         self.x = pos[0]
         self.y = pos[1]
         self.type = type
@@ -110,15 +110,15 @@ class FlourBlock:
         elif self.type is 14:
             self.image.clip_draw(positionX[6], positionY[10], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -1:
-            self.image.clip_draw(positionX[3], positionY[3], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[0], positionY[3], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -2:
-            self.image.clip_draw(positionX[3], positionY[2], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[0], positionY[2], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -3:
-            self.image.clip_draw(positionX[3], positionY[1], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[0], positionY[1], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -4:
-            self.image.clip_draw(positionX[5], positionY[3], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[2], positionY[3], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -5:
-            self.image.clip_draw(positionX[5], positionY[2], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[2], positionY[2], 32, 32, self.x, self.y, 64, 64)
         elif self.type is -6:
-            self.image.clip_draw(positionX[5], positionY[1], 32, 32, self.x, self.y, 64, 64)
+            self.image.clip_draw(positionX[2], positionY[1], 32, 32, self.x, self.y, 64, 64)
         pass
