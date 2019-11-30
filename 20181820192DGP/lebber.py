@@ -96,5 +96,5 @@ class LebberBottom:
         pass
 
     def draw(self):
-        self.image.draw(self.x, self.y, image_sizeW, image_sizeH)
+
         pass

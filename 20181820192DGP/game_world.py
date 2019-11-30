@@ -23,6 +23,10 @@ def bring_object(layer, idx):
     return objects[layer][idx]
 
 
+def bring_objects(layer):
+    return objects[layer]
+
+
 def clear():
     for o in all_objects():
         del o

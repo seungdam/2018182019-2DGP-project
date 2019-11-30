@@ -47,9 +47,11 @@ class CrushBlock:
         self.top = self.y + 32
         self.right = self.x + 32
         self.bottom = self.y - 32
+
         self.collided_Rect_Height = 0
         self.collided_Rect_Width = 0
         self.collided_Rect = [0, 0, 0, 0]
+
         self.fill = True
 
         pass
@@ -65,7 +67,6 @@ class CrushBlock:
                 self.collided_Rect_Width = self.collided_Rect[2] - self.collided_Rect[0]
 
                 if self.collided_Rect_Width > self.collided_Rect_Height:
-
                     if self.collided_Rect[1] == self.y + 32:
                         player.falling = False
                         player.y += self.collided_Rect_Height

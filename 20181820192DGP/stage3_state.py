@@ -13,31 +13,42 @@ from apple import Apple
 
 name = 'Stage1State'
 
+mapTop = 464
+
+mapFirst = 16
+
+
 player = None
 blockList = []
 crushBlockList = []
 flourBlockList = []
-wallBlockList = []
 objectList = []
 enemy = None
-image_sizeW = 64
-image_sizeH = 64
+enemyList = []
+image_sizeW = 32
+image_sizeH = 32
 
 count = 0
 
 backGround = None
 flag = None
 
-tile_type = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
-             [0, 0, 0, 0, 13, 22, 0, 0, 0, 0, 0,   13, 0, 0, 0, 0, 0, 0, 0],  # 1
-             [0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0,  14, 0, 0, 0, 0, 0, 0, 0],  # 2
-             [0, 0, 0, 0, 1, 2, 2, 3, 20, 20, 20, 3, 0, 0, 0, 0, 0, 0, 0],  # 3
-             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0,    13, 0, 0, 0, 0, 1, 2, 3],  # 4
-             [0, 0, 0, 0, 4, 5, 5, 6, 20, 20, 20, 14, 0, 0, 0, 0, 4, 5, 6],  # 5
-             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 6],  # 6
-             [0, 0, 0, 0, 4, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 21, 4, 5, 6],  # 7
-             [0, 0, 0, 0, 4, 5, 5, -4, 2, 2, 2, 2, 2, 2, 2, 2, -1, 5, 6],  # 8
-             [0, 0, 0, 0, 4, 5, 5, -5, 5, 5, 5, 5, 5, 5, 5, 5, -2, 5, 6]  # 9
+tile_type = [
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 1      464
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 2      432
+             [0, 0, 21, 0, 0, 22, 10, 10, 20, 20, 20, 10, 10, 0, 0, 0, 0, 0, 0],  # 3      400
+             [0, 1, 2, 2, 3, 22, 0, 11, 0, 0, 0, 0, 11, 22, 1, 2, 3, 0, 0],  # 4      368
+             [0, 7, 8, 8, 9, 23, 0, 11, 0, 0, 12, 12, 11, 23, 7, 8, 9, 0, 0],  # 5      336
+             [0, 0, 0, 0, 0, 23, 0, 11, 0, 0, 0, 0, 11, 23, 0, 0, 0, 0, 0],  # 6     304
+             [0, 0, 0, 0, 0, 23, 0, 11, 12, 12, 0, 0, 11, 23, 13, 13, 0, 0, 0],  # 7     272
+             [0, 1, 2, 2, 3, 23, 0, 0, 0, 0, 0, 0, 11, 23, 0, 0, 0, 13, 0],  # 8     240
+             [0, 7, 8, 8, 9, 23, 0, 0, 0, 0, 0, 0, 11, 23, 0, 0, 0, 0, 0],  # 9     208
+             [0, 0, 0, 0, 0, 23, 0, 12, 12, 12, 12, 12, 23, 0, 0, 0, 0, 0, 0],  # 10     176
+             [0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0,22, 0, 0, 0, 0],  # 11     144
+             [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3],  # 12     112
+             [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 13      80
+             [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 14      48
+             [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 15      16
              ]
 
 
@@ -59,33 +70,32 @@ def enter():
     global enemy
     global backGround
     global flag
-
-
+    global enemyList
     backGround = BackGround()
     game_world.add_object(backGround, 0)
 
-
+    enemy = Monster1((600, 96))
+    game_world.add_object(enemy, 2);
 
     for i in range(10):
         for k in range(19):
             if tile_type[i][k] is 20:
-                crushBlockList.append(CrushBlock((32 + 64 * k, 608 - i * 64)))
+                crushBlockList.append(CrushBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH)))
             elif tile_type[i][k] is 21:
-                flag = Flag((32 + 64 * k, 608 - i * 64))
-            elif tile_type[i][k] is 22:
-                player = Ohdam((32 + 64 * k, 608 - i * 64))
-            elif tile_type[i][k] is 0:
+                flag = Flag((mapFirst + image_sizeW * k, mapTop - i * image_sizeH))
+            elif tile_type[i][k] is 25:
+                player = Ohdam((mapFirst + image_sizeW * k, mapTop - i * image_sizeH))
+            elif tile_type[i][k] is 26:
+                enemyList.append(Monster1((mapFirst + image_sizeW * k, mapTop - i * image_sizeH)))
                 pass
             else:
-                flourBlockList.append(FlourBlock((32 + 64 * k, 608 - i * 64), tile_type[i][k]))
+                flourBlockList.append(FlourBlock((16 + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
 
-    game_world.add_object(flag, 2)
-    game_world.add_objects(flourBlockList, 2);
-    game_world.add_objects(crushBlockList, 2);
-    game_world.add_objects(wallBlockList, 2);
+    game_world.add_object(flag, 3)
+    game_world.add_objects(flourBlockList, 3);
+    game_world.add_objects(crushBlockList, 3);
+    game_world.add_objects(enemyList, 2);
     game_world.add_object(player, 1)
-    enemy = Monster1((600, 96))
-    game_world.add_object(enemy, 1);
 
     for i in range(0, 6):
         objectList.append(Apple((520 + i * 30, 470)))
