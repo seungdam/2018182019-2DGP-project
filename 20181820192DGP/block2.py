@@ -1,9 +1,8 @@
 from pico2d import *
 import game_world
 
-positionX = [0, 32, 64, 96, 128, 160, 192]
-positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320]
-
+positionX = [0, 32, 64, 96]
+positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256]
 image_sizeW = 32
 image_sizeH = 32
 
@@ -36,7 +35,7 @@ class FlourBlock:
 
     def __init__(self, pos, type):
         if FlourBlock.image is None:
-            self.image = load_image('chip\\tileset\\newTile(7X11)3.png')
+            self.image = load_image('chip\\tileset\\newTile4.png')
         self.x = pos[0]
         self.y = pos[1]
         self.type = type
@@ -52,7 +51,8 @@ class FlourBlock:
 
         # -----------------------------------------
         pass
-
+    def get_bb(self):
+        return self.x - 16, self.y + 16, self.x + 16, self.y - 16
     def update(self):
         player = game_world.bring_object(1, 0)
 
@@ -79,49 +79,51 @@ class FlourBlock:
 
     def draw(self):
         if self.type is 1:
-            self.image.clip_draw(positionX[0], positionY[10], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 2:
-            self.image.clip_draw(positionX[1], positionY[10], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 3:
-            self.image.clip_draw(positionX[2], positionY[10], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 4:
-            self.image.clip_draw(positionX[0], positionY[9], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 5:
-            self.image.clip_draw(positionX[1], positionY[9], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 6:
-            self.image.clip_draw(positionX[2], positionY[9], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 7:
             self.image.clip_draw(positionX[0], positionY[8], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 8:
+        elif self.type is 2:
             self.image.clip_draw(positionX[1], positionY[8], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 9:
+        elif self.type is 3:
             self.image.clip_draw(positionX[2], positionY[8], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 4:
+            self.image.clip_draw(positionX[0], positionY[7], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 5:
+            self.image.clip_draw(positionX[1], positionY[7], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 6:
+            self.image.clip_draw(positionX[2], positionY[7], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 7:
+            self.image.clip_draw(positionX[0], positionY[6], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 8:
+            self.image.clip_draw(positionX[1], positionY[6], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+        elif self.type is 9:
+            self.image.clip_draw(positionX[2], positionY[6], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
         elif self.type is -1:
-            self.image.clip_draw(positionX[0], positionY[3], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[0], positionY[5], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
         elif self.type is -2:
-            self.image.clip_draw(positionX[1], positionY[3], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[1], positionY[5], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -3:
-            self.image.clip_draw(positionX[2], positionY[3], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[2], positionY[5], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -4:
-            self.image.clip_draw(positionX[0], positionY[2], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[0], positionY[4], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -5:
-            self.image.clip_draw(positionX[1], positionY[2], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[1], positionY[4], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -6:
-            self.image.clip_draw(positionX[2], positionY[2], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[2], positionY[4], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -7:
-            self.image.clip_draw(positionX[0], positionY[1], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[0], positionY[3], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -8:
-            self.image.clip_draw(positionX[1], positionY[1], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[1], positionY[3], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is -9:
             self.image.clip_draw(positionX[2], positionY[3], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
 
         elif self.type is 10:
-            self.image.clip_draw(positionX[6], positionY[10], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[3], positionY[2], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is 11:
-            self.image.clip_draw(positionX[6], positionY[9], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[3], positionY[1], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
         elif self.type is 12:
-            self.image.clip_draw(positionX[6], positionY[8], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[3], positionY[0], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
 
         elif self.type is 13:
-            self.image.clip_draw(positionX[3], positionY[9], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[3], positionY[7], 32, 32, self.x, self.y,  object_sizeW, object_sizeH)
+
+        draw_rectangle(*self.get_bb())
         pass

@@ -6,6 +6,9 @@ import random
 
 image_sizeW = 64
 image_sizeH = 64
+object_sizeW = 32
+object_sizeH = 32
+
 
 RUN,IDLE,STUN = range(3)
 

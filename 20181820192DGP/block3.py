@@ -4,9 +4,12 @@ import random
 
 IMAGE_WIDTH, IMAGE_HEIGHT = 32, 32
 
-positionX = [0, 32, 64, 96, 128, 160, 192]
-positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320]
-
+positionX = [0, 32, 64, 96]
+positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256]
+object_sizeW = 32
+object_sizeH = 32
+image_sizeW = 32
+image_sizeH = 32
 
 def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rect1_bottom,
                           rect2_left, rect2_top, rect2_right, rect2_bottom):
@@ -31,22 +34,26 @@ def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rec
 
 image_sizeW = 64
 image_sizeH = 64
+
 object_sizeW = 32
 object_sizeH = 32
+
+colW = 16
+colH = 16
 RUN, IDLE, STUN = range(3)
 
 
 class CrushBlock:
     def __init__(self, pos):
-        self.image = load_image('chip\\tileset\\newTile(7X11).png')
+        self.image = load_image('chip\\tileset\\newTile4.png')
         self.x = pos[0]
         self.y = pos[1]
         self.restore = 1000
 
-        self.left = self.x - 32
-        self.top = self.y + 32
-        self.right = self.x + 32
-        self.bottom = self.y - 32
+        self.left = self.x - object_sizeW
+        self.top = self.y + object_sizeW
+        self.right = self.x + object_sizeW
+        self.bottom = self.y - object_sizeW
 
         self.collided_Rect_Height = 0
         self.collided_Rect_Width = 0
@@ -67,16 +74,16 @@ class CrushBlock:
                 self.collided_Rect_Width = self.collided_Rect[2] - self.collided_Rect[0]
 
                 if self.collided_Rect_Width > self.collided_Rect_Height:
-                    if self.collided_Rect[1] == self.y + 32:
+                    if self.collided_Rect[1] == self.y + colW:
                         player.falling = False
                         player.y += self.collided_Rect_Height
-                    elif self.collided_Rect[3] == self.y - 32:
+                    elif self.collided_Rect[3] == self.y - colW:
                         player.y -= self.collided_Rect_Height
                         player.y -= 1
                 else:
-                    if self.collided_Rect[0] == self.x - 32:
+                    if self.collided_Rect[0] == self.x - 16:
                         player.x -= self.collided_Rect_Width
-                    elif self.collided_Rect[2] == self.x + 32:
+                    elif self.collided_Rect[2] == self.x + 16:
                         player.x += self.collided_Rect_Width
 
             if self.left - 42 <= player.x <= self.left and self.top <= player.y <= self.top + 32 and player.do_right_action:  # 플레이어 -> 블록
@@ -93,5 +100,4 @@ class CrushBlock:
 
     def draw(self):
         if self.fill:
-            self.image.clip_composite_draw(32, 256, 32, 32, 0.0, 'v',
-                                           self.x, self.y, image_sizeW, image_sizeH)
+            self.image.clip_draw(positionX[3], positionY[3], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
