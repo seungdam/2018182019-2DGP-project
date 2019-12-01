@@ -41,34 +41,29 @@ flag = None
 # object -1
 # side lebber -2
 tile_type = [
-    [0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
-    [0, 1, 1, 1, 4, 0, 1, 3, 3, 3, 1, 4, 1, 1, 1, 1, 3, 3, 0],  # 1
-    [0, 2, 2, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 2, 1, 3, 3, 0],  # 2
-    [0, 0, 0, 0, 5, 0, 2, 0, 1, 1, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 3
-    [0, 1, 1, 1, 5, 0, 2, 0, 0, 0, 2, 5, 0, 1, 1, 1, 0, 0, 0],  # 4
-    [0, 2, 2, 0, 5, 0, 2, 1, 1, 0, 2, 5, 0, 0, 0, 2, 1, 1, 0],  # 5
-    [0, 0, 0, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 6
-    [0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0],  # 7
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],  # 8
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9
+    [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0],  # 0
+    [0, 0, 1, 1, 1, 4, 0, 1, 3, 3, 3, 1, 4, 1, 1, 1, 1, 3, 3, 1],  # 1
+    [0, 0, 2, 2, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 2, 2, 3, 3, 0],  # 2
+    [0, 0, 0, 7, 0, 5, 0, 2, 0, 1, 1, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 3
+    [0, 0, 1, 1, 1, 5, 0, 2, 0, 0, 0, 2, 5, 0, 1, 1, 1, 0, 0, 0],  # 4
+    [0, 0, 2, 2, 0, 5, 0, 2, 1, 1, 0, 2, 5, 0, 0, 0, 2, 1, 1, 1],  # 5
+    [0, 0, 0, 0, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 6
+    [8, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0],  # 7
+    [1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 3, 3, 1, 1, 1, 3, 3, 1, 1],  # 8
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9
 ]
 
 
 def enter():
     global player
     global objectList
-    global enemy
     global backGround
     global flag
     global enemyList
     backGround = BackGround()
     game_world.add_object(backGround, 0)
-
-    enemy = Monster1((600, 96))
-    game_world.add_object(enemy, 2);
-
     for i in range(10):
-        for k in range(19):
+        for k in range(20):
             if tile_type[i][k] is 3:
                 crushBlockList.append(CrushBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH)))
             elif tile_type[i][k] is 4:
@@ -88,12 +83,12 @@ def enter():
             else:
                 flourBlockList.append(FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
 
-    game_world.add_object(flag, 3)
-    game_world.add_objects(lebberList, 6);
+    game_world.add_object(flag, 5)
+    game_world.add_objects(lebberList, 1);
     game_world.add_objects(flourBlockList, 3);
     game_world.add_objects(crushBlockList, 4);
     game_world.add_objects(enemyList, 2);
-    game_world.add_object(player, 1)
+    game_world.add_object(player, 6)
 
     for i in range(0, 6):
         objectList.append(Apple((520 + i * 30, 470)))
@@ -133,31 +128,23 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    backGround.draw()
-    player.draw()
-    flag.draw()
-    player.draw()
-    enemy.draw()
-    for i in flourBlockList:
-        i.draw()
-    for i in crushBlockList:
-        i.draw()
-    for i in objectList:
-        i.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
     update_canvas()
 
 
 def update():
-    player.update()
-    flag.update()
+
     if flag.end:
         game_framework.change_state(level_select_state)
-    player.falling = True
 
-    for i in flourBlockList:
-        i.update()
-    for i in crushBlockList:
-        i.update()
-    for i in objectList:
-        i.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
+
+    player.falling = True
+    for i in enemyList:
+        i.falling = True
+    for game_object in game_world.all_objects():
+        game_object.late_update()
+
     pass

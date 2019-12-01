@@ -52,7 +52,6 @@ class FlourBlock:
         self.collided_Rect_Height = 0
         self.collided_Rect_Width = 0
         self.collided_Rect = [0, 0, 0, 0]
-
         # --------- 플레이어 객체 정보 ---------
 
         # -----------------------------------------
@@ -63,8 +62,8 @@ class FlourBlock:
     def update(self):
         pass
     def late_update(self):
-        player = game_world.bring_object(1, 0)
-
+        player = game_world.bring_object(6, 0)
+        enemy = game_world.bring_objects(2)
         if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
                                  player.left, player.top, player.right, player.bottom):
             self.collided_Rect_Height = self.collided_Rect[1] - self.collided_Rect[3]
@@ -83,6 +82,28 @@ class FlourBlock:
                     player.x -= self.collided_Rect_Width
                 elif self.collided_Rect[2] == self.x + colW:
                     player.x += self.collided_Rect_Width
+
+        for i in enemy:
+            if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
+                                     i.left2, i.top2, i.right2, i.bottom2):
+                self.collided_Rect_Height = self.collided_Rect[1] - self.collided_Rect[3]
+                self.collided_Rect_Width = self.collided_Rect[2] - self.collided_Rect[0]
+
+                if self.collided_Rect_Width > self.collided_Rect_Height:
+
+                    if self.collided_Rect[1] == self.y + colH:
+                        if i.state is not 2:
+                            i.falling = False
+                        i.y += self.collided_Rect_Height
+                    elif self.collided_Rect[3] == self.y - colH:
+                        i.y -= self.collided_Rect_Height
+                        i.y -= 1
+                else:
+                    if self.collided_Rect[0] == self.x - colW:
+                        i.x -= self.collided_Rect_Width
+                    elif self.collided_Rect[2] == self.x + colW:
+                        i.x += self.collided_Rect_Width
+
         pass
 
     def draw(self):

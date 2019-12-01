@@ -1,15 +1,15 @@
-from pico2d import*
+from pico2d import *
 import game_world
-
 
 image_sizeW = 32
 image_sizeH = 32
 
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 64
 
 positionX = [0, 32, 64, 96, 128, 160, 192]
 positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320]
+
 
 def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rect1_bottom,
                           rect2_left, rect2_top, rect2_right, rect2_bottom):
@@ -42,6 +42,11 @@ class Lebber:
         self.top = self.y + 32
         self.right = self.x + 32
         self.bottom = self.y - 32
+
+        self.collided_Rect_Height = 0
+        self.collided_Rect_Width = 0
+        self.collided_Rect = [0, 0, 0, 0]
+
         pass
 
     def update(self):
@@ -52,7 +57,10 @@ class Lebber:
         return self.x - 32, self.y + 32, self.x + 32, self.y - 32
 
     def update(self):
-        player = game_world.bring_object(1, 0)
+        pass
+
+    def late_update(self):
+        player = game_world.bring_object(6, 0)
         if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
                                  player.left, player.top, player.right, player.bottom):
             player.can_up = True
@@ -61,11 +69,11 @@ class Lebber:
         pass
 
     def draw(self):
-        if self.type is 5:
+        if self.type is 4:
             self.image.clip_draw(positionX[1], positionY[7], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 6:
+        elif self.type is 5:
             self.image.clip_draw(positionX[1], positionY[6], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 7:
+        elif self.type is 6:
             self.image.clip_draw(positionX[1], positionY[5], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
 
         pass

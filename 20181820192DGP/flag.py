@@ -2,7 +2,6 @@ from pico2d import *
 import game_world
 import game_framework
 
-
 image_sizeW = 64
 image_sizeH = 64
 
@@ -12,6 +11,7 @@ object_sizeH = 32
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
+
 
 def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rect1_bottom,
                           rect2_left, rect2_top, rect2_right, rect2_bottom):
@@ -58,16 +58,12 @@ class Flag:
 
     def update(self):
         objects = game_world.bring_objects(5)
+        player = game_world.bring_object(6, 0)
         count = 0
-        player = game_world.bring_object(1, 0)
         for i in objects:
             count += 1
         if player.objectNum is count:
             self.flagOn = True
-        if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
-                                 player.left, player.top, player.right, player.bottom):
-            if self.flagOn:
-                self.end = True
 
         if self.flagOn:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
@@ -76,7 +72,12 @@ class Flag:
         pass
 
     def late_update(self):
+        player = game_world.bring_object(1, 0)
 
+        if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
+                                 player.left, player.top, player.right, player.bottom):
+            if self.flagOn:
+                self.end = True
         pass
 
     def draw(self):

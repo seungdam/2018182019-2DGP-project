@@ -30,7 +30,7 @@ class Apple:
         pass
 
     def late_update(self):
-        player = game_world.bring_object(1, 0)
+        player = game_world.bring_object(6, 0)
         if self.exist:
             player.objectNum += 1
         self.exist = False

@@ -4,11 +4,14 @@ import game_world
 import game_framework
 import random
 
-image_sizeW = 32
-image_sizeH = 32
+image_sizeW = 64
+image_sizeH = 64
 
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 64
+
+colH = 32
+colW = 32
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -23,6 +26,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 RUN, IDLE, STUN = range(3)
 LEFT, RIGHT = range(2)
+
 
 def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rect1_bottom,
                           rect2_left, rect2_top, rect2_right, rect2_bottom):
@@ -45,7 +49,6 @@ def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rec
         return False
 
 
-
 class Monster1:
     def __init__(self, pos):
         self.run = load_image('chip\\enemy\\run.png')
@@ -57,10 +60,17 @@ class Monster1:
         self.dir = 1
         self.change_state_time = 700
         self.velocity = RUN_SPEED_PPS
-        self.left = self.x - 16
-        self.top = self.y + 16
-        self.right = self.x + 16
-        self.bottom = self.y - 16
+        self.falling = True
+
+        self.left = self.x - colW
+        self.top = self.y + colH
+        self.right = self.x + colW
+        self.bottom = self.y - colH
+
+        self.left2 = self.x - colW + 10
+        self.top2 = self.y + colH
+        self.right2 = self.x + colW - 10
+        self.bottom2 = self.y - colH
 
         self.camera_left = 0
         self.camera_top = 0
@@ -74,45 +84,50 @@ class Monster1:
 
         self.sleep = False  # 플레이어가 오브젝트를 먹는 순간 해제
         self.rezen_time = 2000
-        self.rezen_postion =[pos[0], pos[1]]
+        self.rezen_position = [pos[0], pos[1]]
         pass
 
     def get_bb(self):
-        return self.x - 8, self.y + 16, self.x + 8, self.y - 16
+        return self.left2, self.top2, self.right2, self.bottom2
+
+    def get_bb2(self):
+        return self.camera_left, self.camera_top, self.camera_right, self.camera_bottom
+
     def update(self):
 
-        player = game_world.bring_object(1, 0)
+        if self.falling:
+            self.y -= RUN_SPEED_PPS * game_framework.frame_time
 
         wall = game_world.bring_objects(3)
         crush = game_world.bring_objects(4)
 
-        if self.state is RUN:
+        if self.state is RUN and self.falling is False:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
 
             if self.dir is RIGHT:
                 self.x += self.velocity * game_framework.frame_time
-                self.camera_left = self.left + 8
-                self.camera_top =  self.bottom - 8
-                self.camera_right = self.camera_left + 16
-                self.camera_bottom = self.camera_top - 16
             elif self.dir is LEFT:
                 self.x -= self.velocity * game_framework.frame_time
-                self.camera_left = self.camera_right - 16
-                self.camera_top = self.bottom -8
-                self.camera_right = self.left - 8
-                self.camera_bottom = self.camera_top - 16
 
             self.change_state_time -= 1
 
             for i in crush:
-                if not intersected_rectangle(self.collided_Rect2, self.camera_left, self.camera_top, self.camera_right, self.camera_bottom,
-                                     crush[i].left,  crush[i].top,  crush[i].right, crush[i].bottom):
-                    self.change_state_time = 0
+                if self.bottom - 40 <= i.y <= self.bottom:
+                    if intersected_rectangle(self.collided_Rect2, self.camera_left, self.camera_top, self.camera_right,
+                                             self.camera_bottom, i.left, i.top, i.right, i.bottom):
+                        self.change_state_time = 0
 
+
+            for i in wall:
+                if self.bottom - 40 <= i.y <= self.bottom:
+                    if intersected_rectangle(self.collided_Rect2, self.camera_left, self.camera_top, self.camera_right,
+                                             self.camera_bottom, i.left, i.top, i.right, i.bottom):
+                        self.change_state_time = 0
 
             if self.change_state_time < 0:
                 self.change_state_time = 500
                 self.state = IDLE
+
         elif self.state is IDLE:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11
             self.change_state_time -= 1
@@ -124,31 +139,63 @@ class Monster1:
                 else:
                     self.dir = RIGHT
         elif self.state is STUN:
-
-            if self.state is STUN:
-                if player.falling:
-                    player.falling = False
-                    if player.bottom < self.top:
-                        player.y += (self.top - player.bottom)
-
             self.rezen_time -= 1
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11
 
             if self.rezen_time < 0:
                 self.rezen_time = 1000
-                self.rezen((self.rezen_postion[0], self.rezen_postion[1]))
+                self.rezen((self.rezen_position[0], self.rezen_position[1]))
 
         self.left = self.x - 32
         self.top = self.y + 32
         self.right = self.x + 32
         self.bottom = self.y - 32
+
+        self.left2 = self.x - colW + 10
+        self.top2 = self.y + colH - 10
+        self.right2 = self.x + colW - 10
+        self.bottom2 = self.y - colH
+
+        if self.dir is RIGHT:
+            self.camera_left = self.right + 16
+            self.camera_top = self.bottom - 16
+            self.camera_right = self.camera_left + colW
+            self.camera_bottom = self.camera_top - colW
+        elif self.dir is LEFT:
+            self.camera_left = self.left - 16 - colW
+            self.camera_top = self.bottom - 16
+            self.camera_right = self.left - 16
+            self.camera_bottom = self.camera_top - colH
+
         pass
 
+    def late_update(self):
+
+        player = game_world.bring_object(6, 0)
+
+        if self.state is STUN:
+            if intersected_rectangle(self.collided_Rect2, self.left, self.top, self.right,
+                                     self.bottom, player.left, player.top, player.right, player.bottom):
+                self.collided_Rect_Height = self.collided_Rect[1] - self.collided_Rect[3]
+                self.collided_Rect_Width = self.collided_Rect[2] - self.collided_Rect[0]
+
+                if self.collided_Rect_Width > self.collided_Rect_Height:
+                    if self.collided_Rect[1] == self.y + colH:
+                        player.falling = False
+                        player.y += self.collided_Rect_Height
+                    elif self.collided_Rect[3] == self.y - colH:
+                        player.y -= self.collided_Rect_Height
+                        player.y -= 1
+                else:
+                    if self.collided_Rect[0] == self.x - colW:
+                        player.x -= self.collided_Rect_Width
+                    elif self.collided_Rect[2] == self.x + colW:
+                        player.x += self.collided_Rect_Width
 
     def rezen(self, pos):
         self.x = pos[0]
         self.y = pos[1]
-        self.state = IDLE
+        self.state = RUN
         self.dir = random.randint(0,1)
 
     def draw(self):
@@ -160,6 +207,7 @@ class Monster1:
                                              self.x, self.y, object_sizeW, object_sizeH)
         elif self.state is STUN or self.state is IDLE:
             self.idle.clip_draw(int(self.frame) * image_sizeW, 0, object_sizeW, object_sizeH, self.x, self.y)
-
         draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb2())
+        print(self.state)
         pass

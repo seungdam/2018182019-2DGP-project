@@ -248,8 +248,10 @@ class Ohdam:
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
 
         if self.state is UP_CLIMBING:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
             self.y += RUN_SPEED_PPS * game_framework.frame_time
         elif self.state is DOWN_CLIMBING:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
         else:
             self.cur_state.do(self)
@@ -270,7 +272,10 @@ class Ohdam:
         pass
 
     def draw(self):
-        self.cur_state.draw(self)
+        if self.state is UP_CLIMBING or self.state is DOWN_CLIMBING:
+            self.up_down.clip_draw(int(self.frame) * 64, 0, object_sizeW, object_sizeH, self.x, self.y)
+        else:
+            self.cur_state.draw(self)
         self.font.draw(self.x - 20, self.y + 20, '(x: %3.2f y: %3.2f)' % (self.x, self.y), (255, 255, 0))
         draw_rectangle(*self.get_bb())
         print(self.falling)

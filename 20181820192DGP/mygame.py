@@ -6,6 +6,6 @@ import stage2_state
 import stage3_state
 import level_select_state
 
-pico2d.open_canvas(640, 480)
+pico2d.open_canvas(1280, 640)
 game_framework.run(stage3_state)
 pico2d.close_canvas()
