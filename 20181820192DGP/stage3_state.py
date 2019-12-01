@@ -13,9 +13,9 @@ from apple import Apple
 
 name = 'Stage1State'
 
-mapTop = 448
+mapTop = 608
 
-mapFirst = 16
+mapFirst = 32
 
 player = None
 blockList = []
@@ -25,30 +25,32 @@ flourBlockList = []
 objectList = []
 enemy = None
 enemyList = []
-image_sizeW = 32
-image_sizeH = 32
+image_sizeW = 64
+image_sizeH = 64
 
 count = 0
 
 backGround = None
 flag = None
 
+# 1 - 3 block wall crush block
+# 4 - 6 lebber
+# 7 player respone
+# 8 enemy respone
+# 9 flag
+# object -1
+# side lebber -2
 tile_type = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 1           448
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 2           416
-    [0, 0, 21, 0, 0, 22, 10, 10, 20, 20, 20, 10, 10, 0, 0, 0, 0, 0, 0],  # 3  400
-    [0, 1, 2, 2, 3, 22, 0, 11, 0, 0, 0, 0, 11, 22, 1, 2, 3, 0, 0],  # 4       368
-    [0, 7, 8, 8, 9, 23, 0, 11, 0, 0, 12, 12, 11, 23, 7, 8, 9, 0, 0],  # 5     336
-    [0, 0, 0, 0, 0, 23, 0, 11, 0, 0, 0, 0, 11, 23, 0, 0, 0, 0, 0],  # 6       304
-    [0, 0, 0, 0, 0, 23, 0, 11, 12, 12, 0, 0, 11, 23, 13, 13, 0, 0, 0],  # 7   272
-    [0, 1, 2, 2, 3, 23, 0, 0, 0, 0, 0, 0, 11, 23, 0, 0, 0, 13, 0],  # 8       240
-    [0, 7, 8, 8, 9, 23, 0, 0, 0, 0, 0, 0, 11, 23, 0, 0, 0, 0, 0],  # 9        208
-    [0, 0, 0, 0, 0, 23, 0, 12, 12, 12, 12, 12, 23, 0, 0, 25, 0, 0, 0],  # 10  176
-    [0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0],  # 11        144
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3],  # 12          112
-    [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 13           80
-    [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 14           48
-    [4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6],  # 15           16
+    [0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0
+    [0, 1, 1, 1, 4, 0, 1, 3, 3, 3, 1, 4, 1, 1, 1, 1, 3, 3, 0],  # 1
+    [0, 2, 2, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 2, 1, 3, 3, 0],  # 2
+    [0, 0, 0, 0, 5, 0, 2, 0, 1, 1, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 3
+    [0, 1, 1, 1, 5, 0, 2, 0, 0, 0, 2, 5, 0, 1, 1, 1, 0, 0, 0],  # 4
+    [0, 2, 2, 0, 5, 0, 2, 1, 1, 0, 2, 5, 0, 0, 0, 2, 1, 1, 0],  # 5
+    [0, 0, 0, 0, 5, 0, 2, 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0],  # 6
+    [0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0],  # 7
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],  # 8
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9
 ]
 
 
@@ -65,26 +67,26 @@ def enter():
     enemy = Monster1((600, 96))
     game_world.add_object(enemy, 2);
 
-    for i in range(15):
+    for i in range(10):
         for k in range(19):
-            if tile_type[i][k] is 20:
-                crushBlockList.append(CrushBlock((mapFirst + 32 * k, mapTop - i * 32)))
-            elif tile_type[i][k] is 21:
-                flag = Flag((mapFirst + 32 * k, mapTop - i * 32))
-            elif tile_type[i][k] is 22:
-                lebberList.append(Lebber((mapFirst + 32 * k, mapTop - i * 32), tile_type[i][k]))
-            elif tile_type[i][k] is 23:
-                lebberList.append(Lebber((mapFirst + 32 * k, mapTop - i * 32), tile_type[i][k]))
-            elif tile_type[i][k] is 24:
-                lebberList.append(Lebber((mapFirst + 32 * k, mapTop - i * 32), tile_type[i][k]))
-            elif tile_type[i][k] is 25:
-                player = Ohdam((mapFirst + 32 * k, mapTop - i * 32))
-            elif tile_type[i][k] is 26:
-                enemyList.append(Monster1((mapFirst + 32 * k, mapTop - i * 32)))
+            if tile_type[i][k] is 3:
+                crushBlockList.append(CrushBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH)))
+            elif tile_type[i][k] is 4:
+                lebberList.append(Lebber((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+            elif tile_type[i][k] is 5:
+                lebberList.append(Lebber((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+            elif tile_type[i][k] is 6:
+                lebberList.append(Lebber((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+            elif tile_type[i][k] is 7:
+                player = Ohdam((mapFirst + image_sizeW * k, mapTop - i * image_sizeH))
+            elif tile_type[i][k] is 8:
+                enemyList.append(Monster1((mapFirst + image_sizeW * k, mapTop - i * image_sizeH)))
+            elif tile_type[i][k] is 9:
+                flag = Flag((mapFirst + image_sizeW * k, mapTop - i * image_sizeH))
             elif tile_type[i][k] is 0:
                 pass
             else:
-                flourBlockList.append(FlourBlock((16 + 32 * k, mapTop - i * 32), tile_type[i][k]))
+                flourBlockList.append(FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
 
     game_world.add_object(flag, 3)
     game_world.add_objects(lebberList, 6);

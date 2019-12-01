@@ -3,10 +3,10 @@ import game_world
 
 
 image_sizeW = 32
-image_sizeH = 32
+image_sizeH = 8
 
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 16
 
 positionX = [0, 32, 64, 96, 128, 160, 192]
 positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320]
@@ -34,14 +34,14 @@ def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rec
 
 class Lebber:
     def __init__(self, pos, type):
-        self.image = load_image('chip\\tileset\\newTile(7X11).png')
+        self.image = load_image('chip\\object\\Brown Off.png')
         self.x = pos[0]
         self.y = pos[1]
         self.type = type
         self.left = self.x - 32
-        self.top = self.y + 32
+        self.top = self.y + 8
         self.right = self.x + 32
-        self.bottom = self.y - 32
+        self.bottom = self.y - 8
         pass
 
     def update(self):
@@ -49,10 +49,11 @@ class Lebber:
         pass
 
     def get_bb(self):
-        return self.x - 32, self.y + 32, self.x + 32, self.y - 32
+        return self.x - 32, self.y + 8, self.x + 32, self.y - 8
 
     def update(self):
         player = game_world.bring_object(1, 0)
+
         if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
                                  player.left, player.top, player.right, player.bottom):
             player.can_up = True
@@ -62,10 +63,7 @@ class Lebber:
 
     def draw(self):
         if self.type is 5:
-            self.image.clip_draw(positionX[1], positionY[7], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 6:
-            self.image.clip_draw(positionX[1], positionY[6], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
-        elif self.type is 7:
-            self.image.clip_draw(positionX[1], positionY[5], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[0], positionY[0], image_sizeW, image_sizeH, self.x, self.y, object_sizeW, object_sizeH)
+
 
         pass

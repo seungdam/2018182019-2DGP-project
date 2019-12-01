@@ -4,8 +4,8 @@ import game_world
 
 image_sizeW = 64
 image_sizeH = 64
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 64
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.5)  # 10 pixel 50 cm
 RUN_SPEED_KMPH = 30.0  # Km / Hour
@@ -100,7 +100,7 @@ class RunState:
         ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
         if not ohdam.falling:
             ohdam.x += ohdam.velocity * game_framework.frame_time
-
+        ohdam.x = clamp(0, ohdam.x, 1280 - 32)
     @staticmethod
     def draw(ohdam):
         if ohdam.dir is 1:
@@ -129,7 +129,7 @@ class LeftActionState:
 
     @staticmethod
     def draw(ohdam):
-        ohdam.action_left.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y, 32, 32)
+        ohdam.action_left.clip_draw(int(ohdam.frame) * 64, 0, 64, 64, ohdam.x, ohdam.y, 64, 64)
 
 
 class RightActionState:
@@ -260,10 +260,10 @@ class Ohdam:
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
-        self.left = self.x - 11
-        self.top = self.y + 10
-        self.right = self.x + 11
-        self.bottom = self.y - 16
+        self.left = self.x - 22
+        self.top = self.y + 20
+        self.right = self.x + 22
+        self.bottom = self.y - 32
 
     def late_update(self):
 

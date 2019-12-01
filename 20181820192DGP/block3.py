@@ -4,12 +4,17 @@ import random
 
 IMAGE_WIDTH, IMAGE_HEIGHT = 32, 32
 
-positionX = [0, 32, 64, 96]
-positionY = [0, 32, 64, 96, 128, 160, 192, 224, 256]
-object_sizeW = 32
-object_sizeH = 32
-image_sizeW = 32
-image_sizeH = 32
+positionX = [0]
+positionY = [0, 48, 96]
+
+image_sizeW = 48
+image_sizeH = 48
+
+object_sizeW = 64
+object_sizeH = 64
+
+object_sizeW2 = 32
+object_sizeH2 = 32
 
 def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rect1_bottom,
                           rect2_left, rect2_top, rect2_right, rect2_bottom):
@@ -32,20 +37,20 @@ def intersected_rectangle(collided_Rect, rect1_left, rect1_top, rect1_right, rec
         return False
 
 
-image_sizeW = 64
-image_sizeH = 64
+image_sizeW = 48
+image_sizeH = 48
 
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 64
 
-colW = 16
-colH = 16
+colW = 32
+colH = 32
 RUN, IDLE, STUN = range(3)
 
 
 class CrushBlock:
     def __init__(self, pos):
-        self.image = load_image('chip\\tileset\\newTile4.png')
+        self.image = load_image('chip\\tileset\\newTile5.png')
         self.x = pos[0]
         self.y = pos[1]
         self.restore = 1000
@@ -54,6 +59,22 @@ class CrushBlock:
         self.top = self.y + object_sizeW
         self.right = self.x + object_sizeW
         self.bottom = self.y - object_sizeW
+
+        self.camera1_left = self.x - object_sizeW
+        self.camera1_top = self.y + object_sizeW
+        self.camera1_right = self.x + object_sizeW
+        self.camera1_bottom = self.y - object_sizeW
+
+        self.camera2_left = self.x - object_sizeW
+        self.camera2_top = self.y + object_sizeW
+        self.camera2_right = self.x + object_sizeW
+        self.camera2_bottom = self.y - object_sizeW
+
+        self.camera3_left = self.x - object_sizeW
+        self.camera3_top = self.y + object_sizeW
+        self.camera3_right = self.x + object_sizeW
+        self.camera3_bottom = self.y - object_sizeW
+
 
         self.collided_Rect_Height = 0
         self.collided_Rect_Width = 0
@@ -65,6 +86,20 @@ class CrushBlock:
 
     def update(self):
 
+        player = game_world.bring_object(1, 0)
+
+        if self.left - 42 <= player.x <= self.left and self.top <= player.y <= self.top + 32 and player.do_right_action:  # 플레이어 -> 블록
+            self.fill = False
+        if self.right + 42 >= player.x >= self.right and self.top <= player.y <= self.top + 32 and player.do_left_action:  # 블록 <- 플레이어
+            self.fill = False
+
+        if not self.fill:
+            self.restore -= 1
+            if self.restore == 0:
+                self.fill = True
+                self.restore = 1000
+        pass
+    def late_update(self):
         player = game_world.bring_object(1, 0)
 
         if self.fill:
@@ -86,18 +121,8 @@ class CrushBlock:
                     elif self.collided_Rect[2] == self.x + 16:
                         player.x += self.collided_Rect_Width
 
-            if self.left - 42 <= player.x <= self.left and self.top <= player.y <= self.top + 32 and player.do_right_action:  # 플레이어 -> 블록
-                self.fill = False
-            if self.right + 42 >= player.x >= self.right and self.top <= player.y <= self.top + 32 and player.do_left_action:  # 블록 <- 플레이어
-                self.fill = False
 
-        elif not self.fill:
-            self.restore -= 1
-            if self.restore == 0:
-                self.fill = True
-                self.restore = 1000
-        pass
 
     def draw(self):
         if self.fill:
-            self.image.clip_draw(positionX[3], positionY[3], 32, 32, self.x, self.y, object_sizeW, object_sizeH)
+            self.image.clip_draw(positionX[0], positionY[0], image_sizeW, image_sizeH, self.x, self.y, object_sizeW, object_sizeH)
