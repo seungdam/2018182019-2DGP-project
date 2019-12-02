@@ -96,18 +96,27 @@ class CrushBlock:
         crush = game_world.bring_objects(4)
         enemy = game_world.bring_objects(2)
 
+        self.canCrush = True
         for i in crush:
             if i.fill:
                 if intersected_rectangle(self.collided_Rect3, self.check2_left, self.check2_top, self.check2_right,
                                          self.check2_bottom,
                                          i.left, i.top, i.right, i.bottom):
                     self.canCrush = False
+
         for i in enemy:
             if i.state is 2:
                 if intersected_rectangle(self.collided_Rect3, self.check2_left, self.check2_top, self.check2_right,
                                          self.check2_bottom,
                                          i.left, i.top, i.right, i.bottom):
                     self.canCrush = False
+
+        if intersected_rectangle(self.collided_Rect2, self.left, self.top, self.right,
+                                 self.bottom, player.left, player.top, player.right,
+                                 player.bottom) and self.fill:
+            if self.left <= player.x <= self.right and self.bottom <= player.y <= self.top and player.state is not 3:
+                player.state = 3
+                player.frame = 0
 
         if intersected_rectangle(self.collided_Rect2, self.check1_left, self.check1_top, self.check1_right,
                                  self.check1_bottom, player.left, player.top, player.right,

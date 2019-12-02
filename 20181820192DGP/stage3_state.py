@@ -97,7 +97,7 @@ def enter():
     for j in range(0, 7):
         objectList.append(Apple((540 + j * 50, 80)))
 
-    game_world.add_objects(objectList, 5);
+    game_world.add_objects(objectList, 7);
     pass
 
 
@@ -144,6 +144,7 @@ def update():
     player.falling = True
     for i in enemyList:
         i.falling = True
+
     for game_object in game_world.all_objects():
         game_object.late_update()
 

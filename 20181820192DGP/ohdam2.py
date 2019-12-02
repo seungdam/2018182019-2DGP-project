@@ -18,7 +18,7 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-UP_CLIMBING, DOWN_CLIMBING = range(2)
+UP_CLIMBING, DOWN_CLIMBING, APPEARING, DISAPPEARING = range(4)
 
 RIGHT_KEY_DOWN, LEFT_KEY_DOWN, UP_KEY_DOWN, DOWN_KEY_DOWN, Z_KEY_DOWN, X_KEY_DOWN, RIGHT_KEY_UP, LEFT_KEY_UP, UP_KEY_UP, DOWN_KEY_UP, Z_KEY_UP, X_KEY_UP = range(
     12)
@@ -98,7 +98,7 @@ class RunState:
     @staticmethod
     def do(ohdam):
         ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
-        if not ohdam.falling:
+        if not ohdam.falling and ohdam.state is not 3 and ohdam.state is not 2:
             ohdam.x += ohdam.velocity * game_framework.frame_time
         ohdam.x = clamp(0, ohdam.x, 1280 - 32)
     @staticmethod
@@ -125,7 +125,7 @@ class LeftActionState:
 
     @staticmethod
     def do(ohdam):
-        ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
+        ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
 
     @staticmethod
     def draw(ohdam):
@@ -150,7 +150,6 @@ class RightActionState:
     @staticmethod
     def draw(ohdam):
         ohdam.action_right.clip_draw(int(ohdam.frame) * 64, 0, object_sizeW, object_sizeH, ohdam.x, ohdam.y)
-
 
 class ClimbingState:
     @staticmethod
@@ -216,6 +215,8 @@ class Ohdam:
         self.up_down = load_image('chip\\character\\character_updown2.png')
         self.action_right = load_image('chip\\character\\character_action_right.png')
         self.action_left = load_image('chip\\character\\character_action_left.png')
+        self.appear = load_image('chip\\character\\Appearing.png')
+        self.dead = load_image('chip\\character\\Disappearing.png')
         self.falling = True
         self.do_left_action = False
         self.do_right_action = False
@@ -227,6 +228,7 @@ class Ohdam:
         self.top = self.y + 20
         self.right = self.x + 22
         self.bottom = self.y - 32
+        self.rezen_position = [pos[0], pos[1]]
 
         self.event_que = []
         self.cur_state = IdleState
@@ -234,8 +236,12 @@ class Ohdam:
 
     pass
 
-    def ohdam_dead(self):
-        game_framework.quit()
+    def ohdam_rezen(self):
+        self.x = self.rezen_position[0]
+        self.y = self.rezen_position[1]
+        self.frame = 0
+        self.state = APPEARING
+        pass
 
     def get_bb(self):
         return self.x - 22, self.y + 20, self.x + 22, self.y - 32
@@ -246,13 +252,20 @@ class Ohdam:
     def update(self):
         if self.falling:
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
-
         if self.state is UP_CLIMBING:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
             self.y += RUN_SPEED_PPS * game_framework.frame_time
         elif self.state is DOWN_CLIMBING:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
+        elif self.state is DISAPPEARING:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+            if self.frame >= 7:
+                self.ohdam_rezen()
+        elif self.state is APPEARING:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+            if self.frame >= 7:
+                self.state = -2
         else:
             self.cur_state.do(self)
 
@@ -274,6 +287,10 @@ class Ohdam:
     def draw(self):
         if self.state is UP_CLIMBING or self.state is DOWN_CLIMBING:
             self.up_down.clip_draw(int(self.frame) * 64, 0, object_sizeW, object_sizeH, self.x, self.y)
+        elif self.state is APPEARING:
+            self.appear.clip_draw(int(self.frame) * 96, 0, 96, 96, self.x, self.y)
+        elif self.state is DISAPPEARING:
+            self.dead.clip_draw(int(self.frame) * 96, 0, 96, 96, self.x, self.y)
         else:
             self.cur_state.draw(self)
         self.font.draw(self.x - 20, self.y + 20, '(x: %3.2f y: %3.2f)' % (self.x, self.y), (255, 255, 0))
