@@ -193,7 +193,7 @@ class CrushBlock:
         if self.fill:
             self.image.clip_draw(positionX[0], positionY[0], image_sizeW, image_sizeH, self.x, self.y, object_sizeW,
                                  object_sizeH)
-        draw_rectangle(*self.get_bb())
-        draw_rectangle(*self.get_bb2())
-        draw_rectangle(*self.get_bb3())
-        draw_rectangle(*self.get_bb4())
+       # draw_rectangle(*self.get_bb())
+       # draw_rectangle(*self.get_bb2())
+       # draw_rectangle(*self.get_bb3())
+       # draw_rectangle(*self.get_bb4())

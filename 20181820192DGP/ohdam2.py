@@ -89,7 +89,6 @@ class RunState:
         elif event == LEFT_KEY_UP:
             ohdam.velocity += RUN_SPEED_PPS
         ohdam.dir = clamp(-1, ohdam.velocity, 1)
-
     @staticmethod
     def exit(ohdam, event):
 
@@ -100,7 +99,7 @@ class RunState:
         ohdam.frame = (ohdam.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
         if not ohdam.falling and ohdam.state is not 3 and ohdam.state is not 2:
             ohdam.x += ohdam.velocity * game_framework.frame_time
-        ohdam.x = clamp(0, ohdam.x, 1280 - 32)
+        ohdam.x = clamp(32, ohdam.x, 1280 - 32)
     @staticmethod
     def draw(ohdam):
         if ohdam.dir is 1:
@@ -252,6 +251,8 @@ class Ohdam:
     def update(self):
         if self.falling:
             self.y -= RUN_SPEED_PPS * game_framework.frame_time
+            if self.y <= 0:
+                self.ohdam_rezen()
         if self.state is UP_CLIMBING:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
             self.y += RUN_SPEED_PPS * game_framework.frame_time

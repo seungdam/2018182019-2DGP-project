@@ -160,5 +160,5 @@ class FlourBlock:
             self.image.clip_draw(positionX[0], positionY[1], image_sizeW, image_sizeH, self.x, self.y, object_sizeW,
                                  object_sizeH)
 
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass

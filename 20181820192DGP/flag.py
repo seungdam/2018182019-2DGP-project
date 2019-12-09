@@ -1,12 +1,13 @@
 from pico2d import *
 import game_world
 import game_framework
+import level_select_state
 
 image_sizeW = 64
 image_sizeH = 64
 
-object_sizeW = 32
-object_sizeH = 32
+object_sizeW = 64
+object_sizeH = 64
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -57,7 +58,7 @@ class Flag:
         return self.x - 10, self.y + 32, self.x + 10, self.y - 32
 
     def update(self):
-        objects = game_world.bring_objects(5)
+        objects = game_world.bring_objects(7)
         player = game_world.bring_object(6, 0)
         count = 0
         for i in objects:
@@ -72,12 +73,12 @@ class Flag:
         pass
 
     def late_update(self):
-        player = game_world.bring_object(1, 0)
+        player = game_world.bring_object(6, 0)
 
         if intersected_rectangle(self.collided_Rect, self.left, self.top, self.right, self.bottom,
                                  player.left, player.top, player.right, player.bottom):
             if self.flagOn:
-                self.end = True
+                game_framework.change_state(level_select_state)
         pass
 
     def draw(self):
@@ -85,5 +86,5 @@ class Flag:
             self.FlagImage.clip_draw(int(self.frame) * image_sizeW, 0, object_sizeW, object_sizeH, self.x, self.y)
         else:
             self.noFlagImage.draw(self.x, self.y)
-        #   draw_rectangle(self.left, self.top, self.right, self.bottom)
+        draw_rectangle(self.left, self.top, self.right, self.bottom)
         pass

@@ -58,7 +58,7 @@ class Monster1:
         self.y = pos[1]
         self.state = RUN  # 0 일때 정지 상태 1일때 움직이는 상태
         self.frame = 0
-        self.dir = 1
+        self.dir = random.randint(0, 1)
         self.change_state_time = 700
         self.velocity = RUN_SPEED_PPS
         self.falling = True
@@ -153,7 +153,6 @@ class Monster1:
         elif self.state is STUN:
             self.rezen_time -= 1
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 11
-
             if self.rezen_time < 0:
                 self.rezen_time = 1000
                 self.rezen((self.rezen_position[0], self.rezen_position[1]))
@@ -223,7 +222,6 @@ class Monster1:
             self.idle.clip_draw(int(self.frame) * image_sizeW, 0, object_sizeW, object_sizeH, self.x, self.y)
         elif self.state is APPEARING:
             self.appear.clip_draw(int(self.frame) * 96, 0, 96, 96, self.x, self.y)
-        draw_rectangle(*self.get_bb())
         # draw_rectangle(*self.get_bb2())
         print(self.state)
         pass
