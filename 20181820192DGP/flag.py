@@ -89,5 +89,4 @@ class Flag:
             self.FlagImage.clip_draw(int(self.frame) * image_sizeW, 0, object_sizeW, object_sizeH, self.x, self.y)
         else:
             self.noFlagImage.draw(self.x, self.y)
-        draw_rectangle(self.left, self.top, self.right, self.bottom)
         pass

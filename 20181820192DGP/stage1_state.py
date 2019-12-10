@@ -119,7 +119,18 @@ def enter():
 
 def exit():
     global music
+    global objectList
+    global blockList
+    global flourBlockList
+    global lebberList
     music.stop()
+    lebberList.clear()
+    crushBlockList.clear()
+    objectList.clear()
+    flourBlockList.clear()
+    enemyList.clear()
+    player = None
+
     game_world.clear()
 
     pass
@@ -139,7 +150,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_state(level_select_state)
         else:
             player.handle_event(event)
     pass
@@ -153,9 +164,6 @@ def draw():
 
 
 def update():
-    if flag.end:
-        game_framework.change_state(level_select_state)
-
     for game_object in game_world.all_objects():
         game_object.update()
 

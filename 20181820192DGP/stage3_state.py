@@ -62,7 +62,7 @@ def enter():
     global flag
     global enemyList
     backGround = BackGround(3)
-    game_world.add_object(backGround, 0)
+    game_world.add_object(BackGround(3), 0)
     global music
 
     music = load_music('sound\\stage.mp3')
@@ -114,8 +114,19 @@ def enter():
 
 def exit():
     global music
+    global objectList
+    global blockList
+    global flourBlockList
+    global lebberList
+    global player
+
     music.stop()
 
+    lebberList.clear()
+    flourBlockList.clear()
+    crushBlockList.clear()
+    objectList.clear()
+    enemyList.clear()
     game_world.clear()
     pass
 
@@ -134,7 +145,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_state(level_select_state)
         else:
             player.handle_event(event)
     pass
