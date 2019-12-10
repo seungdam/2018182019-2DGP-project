@@ -180,6 +180,5 @@ class Monster2:
             self.idle.clip_draw(int(self.frame) * image_sizeW, 0, object_sizeW, object_sizeH, self.x, self.y)
         elif self.state is APPEARING:
             self.appear.clip_draw(int(self.frame) * 96, 0, 96, 96, self.x, self.y)
-        draw_rectangle(self.camera_left,self.camera_top,self.camera_right,self.camera_bottom)
         print(self.state)
         pass
