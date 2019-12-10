@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import level_select_state
 import game_world
 
 image_sizeW = 64
@@ -80,6 +81,7 @@ class IdleState:
 class RunState:
     @staticmethod
     def enter(ohdam, event):
+
         if event == RIGHT_KEY_DOWN:
             ohdam.velocity += RUN_SPEED_PPS
         elif event == LEFT_KEY_DOWN:
@@ -115,6 +117,7 @@ class LeftActionState:
     @staticmethod
     def enter(ohdam, event):
         ohdam.do_left_action = True
+        ohdam.action_sound.play()
         pass
 
     @staticmethod
@@ -134,6 +137,7 @@ class LeftActionState:
 class RightActionState:
     @staticmethod
     def enter(ohdam, event):
+        ohdam.action_sound.play()
         ohdam.do_right_action = True
         pass
 
@@ -216,11 +220,17 @@ class Ohdam:
         self.action_left = load_image('chip\\character\\character_action_left.png')
         self.appear = load_image('chip\\character\\Appearing.png')
         self.dead = load_image('chip\\character\\Disappearing.png')
+        self.dead_sound = load_wav('sound\\die.wav')
+        self.dead_sound.set_volume(40)
+        self.action_sound = load_wav('sound\\action.wav')
+        self.action_sound.set_volume(40)
+
         self.falling = True
         self.do_left_action = False
         self.do_right_action = False
         self.objectNum = 0
         self.state = -2
+        self.life = 3
         self.font = load_font('chip\\font\\ENCR10B.TTF', 16)
         self.can_up = False
         self.left = self.x - 22
@@ -238,6 +248,9 @@ class Ohdam:
     def ohdam_rezen(self):
         self.x = self.rezen_position[0]
         self.y = self.rezen_position[1]
+        self.life -= 1
+        if self.life is 0:
+            game_framework.change_state(level_select_state)
         self.frame = 0
         self.state = APPEARING
         pass
@@ -262,12 +275,13 @@ class Ohdam:
         elif self.state is DISAPPEARING:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
             if self.frame >= 7:
+                self.dead_sound.play()
                 self.ohdam_rezen()
         elif self.state is APPEARING:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
             if self.frame >= 7:
                 self.state = -2
-        else:
+        elif self.state is -2:
             self.cur_state.do(self)
 
         if len(self.event_que) > 0:
@@ -294,8 +308,6 @@ class Ohdam:
             self.dead.clip_draw(int(self.frame) * 96, 0, 96, 96, self.x, self.y)
         else:
             self.cur_state.draw(self)
-        self.font.draw(self.x - 20, self.y + 20, '(x: %3.2f y: %3.2f)' % (self.x, self.y), (255, 255, 0))
-        draw_rectangle(*self.get_bb())
         print(self.falling)
 
     def handle_event(self, event):

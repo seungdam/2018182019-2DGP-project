@@ -42,6 +42,8 @@ class Apple:
         self.y = pos[1]
         self.frame = 0
         self.exist = True
+        self.sound = load_wav('sound\\item.wav')
+        self.sound.set_volume(40)
 
         self.left = self.x - 10
         self.top = self.y + 10
@@ -63,6 +65,7 @@ class Apple:
                                  self.bottom, player.left, player.top, player.right, player.bottom):
             if self.exist:
                 player.objectNum += 1
+                self.sound.play()
                 self.exist = False
 
     def draw(self):

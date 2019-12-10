@@ -27,6 +27,8 @@ enemy = None
 enemyList = []
 image_sizeW = 64
 image_sizeH = 64
+music = None
+
 
 count = 0
 
@@ -41,16 +43,16 @@ flag = None
 # object -1
 # side lebber -2
 tile_type = [
-    [0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0  608
-    [0, 0, 1, 1, 1, 1, 3, 3, 3, 1, 0, 0, 1, 4, 1, 1, 1, 0, 0, 0],  # 1  544
+    [0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],  # 0  608
+    [0, 0, 1, 1, 1, 1, 3, 3, 3, 2, 0, 0, 2, 4, 1, 1, 1, 0, 0, 0],  # 1  544
     [0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2, 6, 0, 4, 2, 0, 0, 0],  # 2  480
-    [0, 0, 0, 0, 0, 2, 3, 3, 3, 2, 0, 0, 2, 1, 1, 5, 2, 0, 9, 0],  # 3  416
-    [0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 0, 6, 2, 0, 0, 0],  # 4  352
+    [0, 0, 0, 0, 0, 2, 3, 3, 3, 2, 0, 0, 2, 1, 1, 5, 2, 0, 0, 0],  # 3  416
+    [0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 0, 6, 2, 0, 9, 0],  # 4  352
     [0, 0, 0, 0, 0, 2, 3, 3, 3, 2, 1, 1, 2, 4, 1, 1, 2, 1, 1, 1],  # 5  288
-    [0, 1, 1, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0],  # 6  224
-    [0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],  # 7  160
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # 8   96
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 9   32
+    [0, 1, 1, 4, 0, 2, 3, 3, 3, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0],  # 6  224
+    [0, 0, 0, 6, 0, 8, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 8, 0, 0, 0],  # 7  160
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1],  # 8   96
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9   32
 ]
 
 
@@ -60,7 +62,13 @@ def enter():
     global backGround
     global flag
     global enemyList
-    backGround = BackGround()
+    global music
+
+    music = load_music('sound\\stage.mp3')
+    music.set_volume(60)
+    music.repeat_play()
+
+    backGround = BackGround(1)
     game_world.add_object(backGround, 0)
     for i in range(10):
         for k in range(20):
@@ -81,7 +89,8 @@ def enter():
             elif tile_type[i][k] is 0:
                 pass
             else:
-                flourBlockList.append(FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+                flourBlockList.append(
+                    FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
 
     game_world.add_object(flag, 5)
     game_world.add_objects(lebberList, 1);
@@ -90,19 +99,29 @@ def enter():
     game_world.add_objects(enemyList, 2);
     game_world.add_object(player, 6)
 
-    for i in range(0, 6):
-        objectList.append(Apple((520 + i * 30, 470)))
-    for k in range(0, 3):
-        objectList.append(Apple((540 + k * 50, 340)))
-    for j in range(0, 7):
-        objectList.append(Apple((540 + j * 50, 80)))
-
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 6 + i * 64, 608)))
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 6 + i * 64, 480)))
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 6 + i * 64, 352)))
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 13 + i * 64, 480)))
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 13 + i * 64, 352)))
+    for i in range(0, 3):
+        objectList.append(Apple((32 + 64 * 14 + i * 64, 608)))
+    for i in range(0, 15):
+        objectList.append(Apple((32 + 64 * 4 + i * 64, 160)))
     game_world.add_objects(objectList, 7);
     pass
 
 
 def exit():
+    global music
+    music.stop()
     game_world.clear()
+
     pass
 
 
@@ -134,7 +153,6 @@ def draw():
 
 
 def update():
-
     if flag.end:
         game_framework.change_state(level_select_state)
 

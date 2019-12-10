@@ -97,13 +97,16 @@ class Monster1:
         return self.camera_left, self.camera_top, self.camera_right, self.camera_bottom
 
     def update(self):
-
-        if self.falling:
-            self.y -= RUN_SPEED_PPS * game_framework.frame_time
-
         wall = game_world.bring_objects(3)
         crush = game_world.bring_objects(4)
         player = game_world.bring_object(6, 0)
+        if self.falling:
+            self.y -= RUN_SPEED_PPS * game_framework.frame_time
+            if intersected_rectangle(self.collided_Rect2, self.left, self.top, self.right,
+                                     self.bottom, player.left, player.top, player.right,
+                                     player.bottom) and player.state is not 3 and self.state is not STUN:
+                player.state = 3
+
         if self.state is RUN and self.falling is False:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 12
             if intersected_rectangle(self.collided_Rect2, self.left, self.top, self.right,
@@ -160,6 +163,7 @@ class Monster1:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
             if self.frame >= 7:
                 self.state = RUN
+
         self.left = self.x - 32
         self.top = self.y + 32
         self.right = self.x + 32

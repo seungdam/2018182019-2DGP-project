@@ -2,40 +2,36 @@ from pico2d import *
 import game_framework
 import stage1_state
 import stage2_state
-name = 'TitleState'
+import stage3_state
+name = 'LevelSelectState'
 
-level1_button = None
-level2_button = None
-level1_minimap = None
-level2_minimap = None
-
+level1 = None
+level2 = None
+level3 = None
+wav = None
 backGround = None
 
 mouseX = 0
 mouseY = 0
 
-change_button1 = False
-change_button2 = False
-
 
 def enter():
-    global level1_button, level1_minimap, level2_button, level2_minimap, backGround
-    if level1_button is None:
-        level1_button = load_image('level_select\\level1_button.png')
-    if level2_button is None:
-        level2_button = load_image('level_select\\level2_button.png')
-    if level1_minimap is None:
-        level1_minimap = load_image('level_select\\level1.png')
-    if level2_minimap is None:
-        level2_minimap = load_image('level_select\\level2.png')
+    global level3, level1, level2, backGround, wav
+    if level1 is None:
+        level1 = load_image('level_select\\01.png')
+    if level2 is None:
+        level2 = load_image('level_select\\02.png')
+    if level3 is None:
+        level3 = load_image('level_select\\03.png')
     if backGround is None:
-        backGround = load_image('chip\\backGround\\realBackGround.png')
+        backGround = load_image('chip\\backGround\\BackGround2.png')
+    if wav is None:
+        wav = load_wav('sound\\button_sound.wav')
+        wav.set_volume(50)
     pass
 
 
 def exit():
-    global level1_button, level1_minimap, level2_button, level2_minimap, backGround
-
     pass
 
 
@@ -48,42 +44,34 @@ def pause():
 
 
 def handle_events():
-
-    global mouseX, mouseY, change_button2,change_button1
+    global mouseX, mouseY, change_button2, change_button1,wav
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_MOUSEMOTION:
-            mouseX, mouseY = event.x, 640 - 1 - event.y
-
-            if 170 <= mouseX <= 470 and 170 <= mouseY <= 470:
-                change_button1 = True
-            else:
-                change_button1 = False
-            if 810 <= mouseX <= 1110 and 170 <= mouseY <= 470:
-                change_button2 = True
-            else:
-                change_button2 = False
+            mouseX = event.x
+            mouseY = 640 - event.y
         elif event.type == SDL_MOUSEBUTTONDOWN:
-            if 170 <= mouseX <= 470 and 170 <= mouseY <= 470:
+            if 320 - 64 <= mouseX <= 320 + 64 and 320 - 64 <= mouseY <= 320 + 64:
+                wav.play()
                 game_framework.change_state(stage1_state)
-            elif 810 <= mouseX <= 1110 and 170 <= mouseY <= 470:
+            elif 640 - 64 <= mouseX <= 640 + 64 and 320 - 64 <= mouseY <= 320 + 64:
+                wav.play()
                 game_framework.change_state(stage2_state)
+            elif 960 - 64 <= mouseX <= 960 + 64 and 320 - 64 <= mouseY <= 320 + 64:
+                wav.play()
+                game_framework.change_state(stage3_state)
 
         else:
             if event.type == SDL_KEYDOWN:
                 if event.key is SDLK_ESCAPE:
                     game_framework.quit()
 
-                elif event.key is SDLK_s:
-                    game_framework.change_state(stage1_state)
-
     pass
 
 
 def update():
-
     pass
 
 
@@ -92,14 +80,8 @@ def draw():
     print(mouseX)
     print(mouseY)
     backGround.draw(640, 320)
-    if not change_button1:
-        level1_button.draw(320, 320)
-    else:
-        level1_minimap.draw(320, 320)
-
-    if not change_button2:
-        level2_button.draw(960, 320)
-    else:
-        level2_minimap.draw(960, 320)
+    level1.draw(320, 320, 128, 128)
+    level2.draw(640, 320, 128, 128)
+    level3.draw(960, 320, 128, 128)
 
     update_canvas()

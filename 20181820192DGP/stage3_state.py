@@ -11,7 +11,7 @@ from lebber2 import Lebber
 from enemy import Monster1
 from apple import Apple
 
-name = 'Stage1State'
+name = 'Stage3State'
 
 mapTop = 608
 
@@ -27,7 +27,7 @@ enemy = None
 enemyList = []
 image_sizeW = 64
 image_sizeH = 64
-
+music = None
 count = 0
 
 backGround = None
@@ -61,8 +61,13 @@ def enter():
     global backGround
     global flag
     global enemyList
-    backGround = BackGround()
+    backGround = BackGround(3)
     game_world.add_object(backGround, 0)
+    global music
+
+    music = load_music('sound\\stage.mp3')
+    music.set_volume(60)
+    music.repeat_play()
     for i in range(10):
         for k in range(20):
             if tile_type[i][k] is 3:
@@ -108,6 +113,9 @@ def enter():
 
 
 def exit():
+    global music
+    music.stop()
+
     game_world.clear()
     pass
 

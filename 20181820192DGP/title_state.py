@@ -7,25 +7,25 @@ name = 'TitleState'
 title_image1 = None
 title_image2 = None
 character_image = None
-
+title_music = None
 timer = 0
 change = True
 
 
 def enter():
-    global character_image, title_image1, title_image2
+    global character_image, title_image1, title_image2, title_music
     title_image1 = load_image('title\\title1.png')
     title_image2 = load_image('title\\title2.png')
+    title_music = load_music('sound\\title.mp3')
 
+    title_music.set_volume(50)
+    title_music.play()
     pass
 
 
 def exit():
-    global character_image, title_image1, title_image2
-
-    del title_image2
-    del title_image1
-
+    global title_music
+    title_music.stop()
     pass
 
 

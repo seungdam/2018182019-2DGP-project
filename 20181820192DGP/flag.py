@@ -47,6 +47,8 @@ class Flag:
         self.top = self.y + 32
         self.right = self.x + 10
         self.bottom = self.y - 32
+        self.sound = load_wav('sound\\flagOn.wav')
+        self.sound.set_volume(40)
         self.collided_Rect_Height = 0
         self.collided_Rect_Width = 0
         self.collided_Rect = [0, 0, 0, 0]
@@ -63,8 +65,9 @@ class Flag:
         count = 0
         for i in objects:
             count += 1
-        if player.objectNum is count:
+        if player.objectNum is count and self.flagOn is False:
             self.flagOn = True
+            self.sound.play()
 
         if self.flagOn:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10

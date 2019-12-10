@@ -9,9 +9,10 @@ from block2 import FlourBlock
 from flag import Flag
 from lebber2 import Lebber
 from enemy import Monster1
+from enemy2 import Monster2
 from apple import Apple
 
-name = 'Stage1State'
+name = 'Stage2State'
 
 mapTop = 608
 
@@ -27,7 +28,7 @@ enemy = None
 enemyList = []
 image_sizeW = 64
 image_sizeH = 64
-
+music = None
 count = 0
 
 backGround = None
@@ -41,17 +42,17 @@ flag = None
 # object -1
 # side lebber -2
 tile_type = [
-   # 32 96
+    # 32 96
     [0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 0  608
-    [0, 0, 1, 1, 1, 4, 0, 0, 0, 4, 1, 1, 1, 0, 4, 1, 4, 0, 0, 0],  # 1  544
-    [0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0],  # 2  480
-    [0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 1, 3, 1, 0, 5, 0, 5, 0, 0, 0],  # 3  416
-    [0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0],  # 4  352
-    [0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 1, 1, 1, 0, 5, 0, 6, 0, 9, 0],  # 5  288
-    [0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 1, 1, 1, 1],  # 6  224
-    [0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0],  # 7  160
-    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],  # 8  96
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 9  32
+    [0, 0, 1, 1, 1, 4, 0, 0, 0, 0, 4, 1, 1, 0, 4, 1, 4, 0, 0, 0],  # 1  544
+    [0, 0, 0, 0, 0, 5, 0, 0, 1, 1, 5, 0, 0, 0, 5, 0, 5, 0, 0, 0],  # 2  480
+    [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 1, 3, 0, 5, 0, 5, 0, 0, 0],  # 3  416
+    [0, 0, 0, 1, 1, 5, 0, 0, 1, 1, 5, 0, 0, 0, 5, 1, 5, 0, 0, 0],  # 4  352
+    [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 1, 1, 0, 5, 0, 6, 0, 9, 0],  # 5  288
+    [0, 0, 0, 1, 1, 5, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 1, 1, 1, 0],  # 6  224
+    [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 8, 0, 0],  # 7  160
+    [0, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 1, 1, 3, 3, 1, 0],  # 8  96
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 9  32
 ]
 
 
@@ -61,8 +62,14 @@ def enter():
     global backGround
     global flag
     global enemyList
-    backGround = BackGround()
+    backGround = BackGround(2)
     game_world.add_object(backGround, 0)
+
+    global music
+    music = load_music('sound\\stage.mp3')
+    music.set_volume(60)
+    music.repeat_play()
+
     for i in range(10):
         for k in range(20):
             if tile_type[i][k] is 3:
@@ -82,7 +89,13 @@ def enter():
             elif tile_type[i][k] is 0:
                 pass
             else:
-                flourBlockList.append(FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+                flourBlockList.append(
+                    FlourBlock((mapFirst + image_sizeW * k, mapTop - i * image_sizeH), tile_type[i][k]))
+
+    enemyList.append(Monster2((32 + 64 * 5, 480)))
+    enemyList.append(Monster2((32 + 64 * 10, 480)))
+    enemyList.append(Monster2((32 + 64 * 14, 480)))
+    enemyList.append(Monster2((32 + 64 * 16, 480)))
 
     game_world.add_object(flag, 5)
     game_world.add_objects(lebberList, 1);
@@ -93,28 +106,37 @@ def enter():
 
     for i in range(0, 6):
         objectList.append(Apple((32 + 64 * 5, 544 - i * 64)))
-    for i in range(0, 6):
-        objectList.append(Apple((32 + 64 * 9, 544 - i * 64)))
+    for i in range(1, 6):
+        objectList.append(Apple((32 + 64 * 10, 544 - i * 64)))
     for i in range(0, 6):
         objectList.append(Apple((32 + 64 * 14, 544 - i * 64)))
     for i in range(0, 5):
         objectList.append(Apple((32 + 64 * 16, 544 - i * 64)))
-    for i in range(0, 3):
+    for i in range(0, 2):
         objectList.append(Apple((32 + 64 * 10 + 64 * i, 608)))
-    for i in range(0, 3):
+    for i in range(0, 2):
         objectList.append(Apple((32 + 64 * 10 + 64 * i, 480)))
-    for i in range(0, 3):
+    for i in range(0, 2):
+        objectList.append(Apple((32 + 64 * 10 + 64 * i, 352)))
+    for i in range(0, 2):
         objectList.append(Apple((32 + 64 * 10 + 64 * i, 352)))
 
-    for k in range(0, 11):
-        objectList.append(Apple((32 + 64 * 4 + k * 64, 160)))
-
+    for k in range(0, 2):
+        objectList.append(Apple((32 + 64 * 8 + k * 64, 544)))
+    for k in range(0, 2):
+        objectList.append(Apple((32 + 64 * 8 + k * 64, 416)))
+    for k in range(0, 2):
+        objectList.append(Apple((32 + 64 * 3 + k * 64, 416)))
+    for k in range(0, 2):
+        objectList.append(Apple((32 + 64 * 3 + k * 64, 288)))
 
     game_world.add_objects(objectList, 7);
     pass
 
 
 def exit():
+    global music
+    music.stop()
     game_world.clear()
     pass
 
@@ -147,7 +169,6 @@ def draw():
 
 
 def update():
-
     if flag.end:
         game_framework.change_state(level_select_state)
 
